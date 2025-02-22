@@ -1,21 +1,15 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Landing from "./Frontend/Landing";
 
 function App() {
-
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/watchlist" element={<Watchlist />} />
-          <Route path="/favourites" element={<Favourites />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </Router>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App
+export default App;
