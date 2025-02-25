@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 const NavbarLanding = () => {
   const [input, setInput] = useState("");
-  const [login, setLogin] = useState(true);
+  const [login, setLogin] = useState(false);
 
   return (
     <div className="relative bg-[url(/bg.jpeg)] w-full h-110 bg-cover bg-left bg-no-repeat">
