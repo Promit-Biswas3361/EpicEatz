@@ -6,7 +6,7 @@ const Navbar = () => {
   const [input, setInput] = useState("");
   const [login, setLogin] = useState(false);
   return (
-    <div className="flex flex-row justify-between w-full h-auto bg-red-200 items-center">
+    <div className="flex flex-row justify-between w-full h-auto bg-red-200 items-center fixed top-0 z-50">
       <div className="">
         <Link to="/">
           <img
@@ -72,7 +72,7 @@ const Navbar = () => {
             Login
           </NavLink>
           <NavLink
-            to="/signup"
+            to="/register"
             className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-red-500"
           >
             SignUp

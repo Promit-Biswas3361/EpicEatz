@@ -1,6 +1,6 @@
 import React from "react";
 import NavbarLanding from "./NavbarLanding";
-import FoodCard from "./FoodCard";
+import PopularItems from "./PopularItems";
 import biryani from "../assets/Biryani.png";
 import burger from "../assets/burger.png";
 import cake from "../assets/cake.png";
@@ -15,7 +15,6 @@ import pav from "../assets/pav.png";
 import pasta from "../assets/pasta.png";
 import bhature from "../assets/Chhole_Bhature.png";
 import khichdi from "../assets/khichdi.png";
-import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const foodItems = [
@@ -45,7 +44,7 @@ const Landing = () => {
         <p className="text-2xl font-bold mb-7">What's on your mind?</p>
         <div className="flex flex-row flex-wrap justify-evenly">
           {foodItems.map((item) => (
-            <FoodCard key={item.id} name={item.name} url={item.url} />
+            <PopularItems key={item.id} name={item.name} url={item.url} />
           ))}
         </div>
       </div>

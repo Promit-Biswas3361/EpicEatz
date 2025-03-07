@@ -1,15 +1,72 @@
-import React from "react";
-import Burger from "../assets/salad.png";
+import React, { useState } from "react";
+import { Star } from "lucide-react";
+import { IndianRupee } from "lucide-react";
+import veg from "../assets/veg.png";
+import nonveg from "../assets/nonveg.jpg";
 
-const FoodCard = ({ name, url }) => {
+const FoodCard = ({ dish }) => {
+  const [count, setCount] = useState(0);
+
   return (
-    <div className="cursor-pointer text-center w-max-45 h-auto mx-3 md:mx-5 lg:mx-7 mb-10">
-      <img
-        src={url}
-        alt={name}
-        className="rounded-[50%] overflow-hidden h-35 w-35 lg:h-37 lg:w-37"
-      />
-      <p className="text-lg">{name}</p>
+    <div className="flex flex-col bg-white p-5 rounded-2xl w-80 lg:w-100 mb-5">
+      <div className="flex flex-col pb-5 border-b-3 border-dotted text-gray-700">
+        <p className="font-bold">By {dish.restaurant_name}</p>
+        <div className="flex flex-row items-center">
+          <Star size={16} fill="gold"/>
+          <p className="ml-2">{dish.restaurant_rating}</p>
+        </div>
+      </div>
+      <div className="flex flex-row items-center mt-4 mb-3 justify-between">
+        <div className="flex flex-col mr-6">
+          {dish.item.category == "Veg" && (
+            <img src={veg} alt="Veg" className="h-7 w-7" />
+          )}
+          {dish.item.category == "Non Veg" && (
+            <img src={nonveg} alt="Non Veg" className="h-7 w-7" />
+          )}
+          <p className="text-lg font-bold">{dish.item.name}</p>
+          <div className="flex flex-row items-center">
+            <IndianRupee size={15} />
+            <p className="font-semibold"> {dish.item.price} </p>
+          </div>
+        </div>
+        <div className="flex flex-col items-center relative">
+          <div className="rounded-2xl overflow-hidden">
+            <img
+              src="/EpicEatz_logo.png"
+              alt={dish.item.name}
+              className="h-50 w-auto bg-red-200"
+            />
+          </div>
+
+          <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg absolute bottom-[-22px] text-lg font-bold text-green-600">
+            {count > 0 ? (
+              <div className="flex flex-row justify-between">
+                <button
+                  className="cursor-pointer mr-5"
+                  onClick={() => setCount(count - 1)}
+                >
+                  -
+                </button>
+                <p>{count}</p>
+                <button
+                  className="cursor-pointer ml-5"
+                  onClick={() => setCount(count + 1)}
+                >
+                  +
+                </button>
+              </div>
+            ) : (
+              <button
+                className="cursor-pointer"
+                onClick={() => setCount(count + 1)}
+              >
+                ADD
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
