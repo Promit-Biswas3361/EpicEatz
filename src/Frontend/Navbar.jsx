@@ -72,7 +72,7 @@ const Navbar = () => {
             Login
           </NavLink>
           <NavLink
-            to="/signup"
+            to="/register"
             className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-red-500"
           >
             SignUp
