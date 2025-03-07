@@ -13,8 +13,8 @@ const searchResult = [
       name: "Paneer Butter Masala",
       price: 250,
       category: "Veg",
-      img: "https://example.com/paneer-butter-masala.jpg"
-    }
+      img: "https://example.com/paneer-butter-masala.jpg",
+    },
   },
   {
     id: 2,
@@ -24,8 +24,8 @@ const searchResult = [
       name: "Chicken Biryani",
       price: 320,
       category: "Non Veg",
-      img: "https://example.com/chicken-biryani.jpg"
-    }
+      img: "https://example.com/chicken-biryani.jpg",
+    },
   },
   {
     id: 3,
@@ -35,8 +35,8 @@ const searchResult = [
       name: "Creamy Alfredo Pasta",
       price: 280,
       category: "Veg",
-      img: "https://example.com/alfredo-pasta.jpg"
-    }
+      img: "https://example.com/alfredo-pasta.jpg",
+    },
   },
   {
     id: 4,
@@ -46,8 +46,8 @@ const searchResult = [
       name: "Cheese Burger",
       price: 180,
       category: "Non Veg",
-      img: "https://example.com/cheese-burger.jpg"
-    }
+      img: "https://example.com/cheese-burger.jpg",
+    },
   },
   {
     id: 5,
@@ -57,8 +57,8 @@ const searchResult = [
       name: "Salmon Sushi",
       price: 450,
       category: "Non Veg",
-      img: "https://example.com/salmon-sushi.jpg"
-    }
+      img: "https://example.com/salmon-sushi.jpg",
+    },
   },
   {
     id: 6,
@@ -68,8 +68,8 @@ const searchResult = [
       name: "Vegan Bowl",
       price: 220,
       category: "Veg",
-      img: "https://example.com/vegan-bowl.jpg"
-    }
+      img: "https://example.com/vegan-bowl.jpg",
+    },
   },
   {
     id: 7,
@@ -79,8 +79,8 @@ const searchResult = [
       name: "Tandoori Chicken",
       price: 350,
       category: "Non Veg",
-      img: "https://example.com/tandoori-chicken.jpg"
-    }
+      img: "https://example.com/tandoori-chicken.jpg",
+    },
   },
   {
     id: 8,
@@ -90,8 +90,8 @@ const searchResult = [
       name: "Margherita Pizza",
       price: 300,
       category: "Veg",
-      img: "https://example.com/margherita-pizza.jpg"
-    }
+      img: "https://example.com/margherita-pizza.jpg",
+    },
   },
   {
     id: 9,
@@ -101,8 +101,8 @@ const searchResult = [
       name: "Pani Puri",
       price: 80,
       category: "Veg",
-      img: "https://example.com/pani-puri.jpg"
-    }
+      img: "https://example.com/pani-puri.jpg",
+    },
   },
   {
     id: 10,
@@ -112,8 +112,8 @@ const searchResult = [
       name: "Grilled Steak",
       price: 600,
       category: "Non Veg",
-      img: "https://example.com/grilled-steak.jpg"
-    }
+      img: "https://example.com/grilled-steak.jpg",
+    },
   },
   {
     id: 11,
@@ -123,8 +123,8 @@ const searchResult = [
       name: "Masala Dosa",
       price: 150,
       category: "Veg",
-      img: "https://example.com/masala-dosa.jpg"
-    }
+      img: "https://example.com/masala-dosa.jpg",
+    },
   },
   {
     id: 12,
@@ -134,8 +134,8 @@ const searchResult = [
       name: "Garlic Butter Prawns",
       price: 500,
       category: "Non Veg",
-      img: "https://example.com/garlic-prawns.jpg"
-    }
+      img: "https://example.com/garlic-prawns.jpg",
+    },
   },
   {
     id: 13,
@@ -145,8 +145,8 @@ const searchResult = [
       name: "Chocolate Lava Cake",
       price: 220,
       category: "Veg",
-      img: "https://example.com/lava-cake.jpg"
-    }
+      img: "https://example.com/lava-cake.jpg",
+    },
   },
   {
     id: 14,
@@ -156,8 +156,8 @@ const searchResult = [
       name: "BBQ Chicken Wings",
       price: 270,
       category: "Non Veg",
-      img: "https://example.com/bbq-wings.jpg"
-    }
+      img: "https://example.com/bbq-wings.jpg",
+    },
   },
   {
     id: 15,
@@ -167,15 +167,13 @@ const searchResult = [
       name: "Cappuccino",
       price: 150,
       category: "Veg",
-      img: "https://example.com/cappuccino.jpg"
-    }
-  }
+      img: "https://example.com/cappuccino.jpg",
+    },
+  },
 ];
 
-
-
 const Search = () => {
-//   const [searchResult, setSearchResult] = useState(null);
+    const [searchResult, setSearchResult] = useState(null);
   const location = useLocation();
   const isDish = location.pathname.startsWith("/dish");
   const isRestaurant = location.pathname.startsWith("/restaurant");
@@ -184,15 +182,15 @@ const Search = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <div className="flex-grow mt-15 mx-5">
+      <div className="flex-grow mx-5 mt-50">
         {searchResult ? (
           <>
             {isDish && (
-                <div className="flex flex-row flex-wrap justify-evenly bg-gray-100 py-8 rounded">
-                    {searchResult.map((item) => (
-                        <FoodCard key={item.id} dish={item}/>
-                    ))}
-                </div>
+              <div className="flex flex-row flex-wrap justify-evenly bg-gray-100 py-8 rounded">
+                {searchResult.map((item) => (
+                  <FoodCard key={item.id} dish={item} />
+                ))}
+              </div>
             )}
             {isRestaurant && <p>Searched Restaurants</p>}
           </>
