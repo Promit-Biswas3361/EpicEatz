@@ -55,7 +55,7 @@ const Footer = () => {
               <a href="https://github.com/Promit-Biswas3361/EpicEatz.git">
                 <Github color="white" />
               </a>
-              <a href="#">
+              <a href="mailto:info@epiceatz.com">
                 <Mail color="white" />
               </a>
               <a href="#">

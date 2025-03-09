@@ -9,7 +9,7 @@ const NavbarLanding = () => {
   return (
     <div className="relative bg-[url(/bg.jpeg)] w-full h-110 bg-cover bg-left bg-no-repeat">
       {login ? (
-        <div className="pt-3 pb-10 mr-2 flex flex-row justify-end">
+        <div className="pt-3 pb-10 mr-2 flex flex-row justify-end items-center">
           <NavLink to="/favourites" className="mx-3">
             <Heart size={32} color="white" className="hover:fill-red-500" />
           </NavLink>
@@ -31,14 +31,20 @@ const NavbarLanding = () => {
       ) : (
         <div className="pt-3 pb-10 flex flex-row justify-end">
           <NavLink
+            to="/new-partner/get-started"
+            className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
+          >
+            Add Restaurant
+          </NavLink>
+          <NavLink
             to="/login"
-            className="text-red-600 md:text-lg bg-white p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-gray-200"
+            className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
           >
             Login
           </NavLink>
           <NavLink
             to="/register"
-            className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-red-500"
+            className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-full mx-2 hover:bg-red-500"
           >
             SignUp
           </NavLink>
