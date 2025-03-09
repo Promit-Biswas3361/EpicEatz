@@ -173,7 +173,7 @@ const searchResult = [
 ];
 
 const Search = () => {
-    const [searchResult, setSearchResult] = useState(null);
+  // const [searchResult, setSearchResult] = useState(null);
   const location = useLocation();
   const isDish = location.pathname.startsWith("/dish");
   const isRestaurant = location.pathname.startsWith("/restaurant");
