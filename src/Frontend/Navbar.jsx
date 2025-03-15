@@ -40,26 +40,23 @@ const Navbar = () => {
       </div>
 
       {login ? (
-        <div className="mr-2 flex flex-row justify-end">
+        <div className="mr-2 flex flex-row justify-end items-center">
           <NavLink to="/favourites" className="mx-3">
             <Heart
-              size={32}
               color="white"
-              className="hover:fill-red-500 color-white"
+              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
             />
           </NavLink>
           <NavLink to="/cart" className="mx-3">
             <ShoppingCart
-              size={32}
               color="white"
-              className="hover:fill-red-500"
+              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
             />
           </NavLink>
           <NavLink to="/account" className="mx-3">
             <CircleUser
-              size={32}
               color="white"
-              className="hover:fill-red-500"
+              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
             />
           </NavLink>
         </div>

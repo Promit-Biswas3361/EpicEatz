@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Star } from "lucide-react";
-import { IndianRupee } from "lucide-react";
+import { Star, IndianRupee } from "lucide-react";
 import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 

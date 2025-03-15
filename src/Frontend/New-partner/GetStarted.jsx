@@ -12,7 +12,7 @@ const GetStarted = () => {
             <img src="/EpicEatz_logo.png" alt="Logo" className="h-35 md:h-40" />
           </NavLink>
           <div className="flex flex-row items-start text-white font-extralight mt-[-20px] ml-3">
-            <p className="text-white font-medium text-sm mx-2">
+            <p className="text-white font-medium text-xs md:text-sm mx-2 md:mx-3">
               PARTNER WITH EPICEATZ!
             </p>
           </div>
@@ -20,7 +20,7 @@ const GetStarted = () => {
         <div className="flex flex-col items-center mt-40 md:mt-57 lg:mt-66">
           <NavLink
             to="/new-partner/step1"
-            className="text-sm md:text-xl text-white bg-blue-600 py-3 px-5 z-30 rounded-xl text-center"
+            className="text-sm md:text-xl text-white bg-blue-600 hover:bg-blue-700 py-3 px-5 z-30 rounded-xl text-center"
           >
             Register your Restaurant
           </NavLink>
@@ -84,7 +84,7 @@ const GetStarted = () => {
       <div className="mt-2 md:mt-5 sm:hidden text-center">
         <NavLink
           to="/new-partner/step1"
-          className="text-sm sm:text-xl text-white bg-blue-500 py-3 px-5 z-30 rounded-xl text-center"
+          className="text-sm sm:text-xl text-white bg-blue-500 hover:bg-blue-600 py-3 px-5 z-30 rounded-xl text-center"
         >
           Get Started
         </NavLink>
