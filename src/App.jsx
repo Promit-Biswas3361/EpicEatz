@@ -6,6 +6,7 @@ import Search from "./Frontend/Search";
 import GetStarted from "./Frontend/New-partner/GetStarted";
 import Step1 from "./Frontend/New-partner/Step1";
 import Step2 from "./Frontend/New-partner/Step2";
+import Cart from "./Frontend/Cart";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/new-partner/get-started" element={<GetStarted />} />
         <Route path="/new-partner/step1" element={<Step1 />} />
         <Route path="/new-partner/step2" element={<Step2 />} />
+        <Route path="/cart" element={<Cart/>} />
       </Routes>
     </Router>
   );

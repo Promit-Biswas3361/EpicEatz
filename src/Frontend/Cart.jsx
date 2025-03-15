@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { useLocation } from "react-router-dom";
-import FoodCard from "./FoodCard";
+import CartItem from "./CartItem";
+import { IndianRupee } from "lucide-react";
 
-const result = [
+const cart = [
   {
     id: 1,
     restaurant_name: "The Spice House",
@@ -14,6 +14,7 @@ const result = [
       price: 250,
       category: "Veg",
       img: "https://example.com/paneer-butter-masala.jpg",
+      qty: 5,
     },
   },
   {
@@ -25,6 +26,7 @@ const result = [
       price: 320,
       category: "Non Veg",
       img: "https://example.com/chicken-biryani.jpg",
+      qty: 1,
     },
   },
   {
@@ -36,6 +38,7 @@ const result = [
       price: 280,
       category: "Veg",
       img: "https://example.com/alfredo-pasta.jpg",
+      qty: 2,
     },
   },
   {
@@ -47,6 +50,7 @@ const result = [
       price: 180,
       category: "Non Veg",
       img: "https://example.com/cheese-burger.jpg",
+      qty: 1,
     },
   },
   {
@@ -58,6 +62,7 @@ const result = [
       price: 450,
       category: "Non Veg",
       img: "https://example.com/salmon-sushi.jpg",
+      qty: 1,
     },
   },
   {
@@ -69,6 +74,7 @@ const result = [
       price: 220,
       category: "Veg",
       img: "https://example.com/vegan-bowl.jpg",
+      qty: 4,
     },
   },
   {
@@ -80,6 +86,7 @@ const result = [
       price: 350,
       category: "Non Veg",
       img: "https://example.com/tandoori-chicken.jpg",
+      qty: 3,
     },
   },
   {
@@ -91,6 +98,7 @@ const result = [
       price: 300,
       category: "Veg",
       img: "https://example.com/margherita-pizza.jpg",
+      qty: 3,
     },
   },
   {
@@ -102,6 +110,7 @@ const result = [
       price: 80,
       category: "Veg",
       img: "https://example.com/pani-puri.jpg",
+      qty: 1,
     },
   },
   {
@@ -113,6 +122,7 @@ const result = [
       price: 600,
       category: "Non Veg",
       img: "https://example.com/grilled-steak.jpg",
+      qty: 2,
     },
   },
   {
@@ -124,6 +134,7 @@ const result = [
       price: 150,
       category: "Veg",
       img: "https://example.com/masala-dosa.jpg",
+      qty: 2,
     },
   },
   {
@@ -135,6 +146,7 @@ const result = [
       price: 500,
       category: "Non Veg",
       img: "https://example.com/garlic-prawns.jpg",
+      qty: 1,
     },
   },
   {
@@ -146,6 +158,7 @@ const result = [
       price: 220,
       category: "Veg",
       img: "https://example.com/lava-cake.jpg",
+      qty: 4,
     },
   },
   {
@@ -157,6 +170,7 @@ const result = [
       price: 270,
       category: "Non Veg",
       img: "https://example.com/bbq-wings.jpg",
+      qty: 2,
     },
   },
   {
@@ -168,42 +182,98 @@ const result = [
       price: 150,
       category: "Veg",
       img: "https://example.com/cappuccino.jpg",
+      qty: 5,
     },
   },
 ];
 
-const Search = () => {
-  const [searchResult, setSearchResult] = useState(result);
-  const location = useLocation();
-  const isDish = location.pathname.startsWith("/dish");
-  const isRestaurant = location.pathname.startsWith("/restaurant");
+const Cart = () => {
+  const [cartItems, setCartItems] = useState(cart);
+  const [itemTotal, setItemTotal] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) {
+      let total = cartItems.reduce(
+        (sum, item) => sum + item.item.price * item.item.qty,
+        0
+      );
+      setItemTotal(total);
+      total = Math.round(total * 1.05 + 40);
+      setTotalAmount(total);
+    }
+  }, [cartItems]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="w-full min-h-screen flex flex-col bg-gray-100">
       <Navbar />
 
-      <div className="flex-grow mx-5 mt-50">
-        {searchResult ? (
-          <>
-            {isDish && (
-              <div className="flex flex-row flex-wrap justify-evenly bg-gray-100 py-8 rounded">
-                {searchResult.map((item) => (
-                  <FoodCard key={item.id} dish={item} />
-                ))}
+      <div className="mt-45 md:mt-50 mx-5 flex-grow flex flex-col">
+        <p className="text-2xl md:text-3xl font-bold text-center">
+          Shopping Cart
+        </p>
+        {cartItems ? (
+          <div className="py-8 sm:mt-5 md:flex">
+            <div className="flex flex-col md:flex-2/3 bg-white rounded-lg px-4 lg:px-7">
+              {cartItems.map((item) => (
+                <CartItem key={item.id} item={item} />
+              ))}
+              <div className="flex flex-row items-center justify-end text-lg my-4 text-right">
+                <p className="mr-2">Subtotal: </p>
+                <div className="flex items-center">
+                  <IndianRupee size={16} />
+                  <p>{itemTotal}</p>
+                </div>
               </div>
-            )}
-            {isRestaurant && <p>Searched Restaurants</p>}
-          </>
+            </div>
+
+            <div className="bg-white max-h-fit md:flex-1/3 md:ml-5 rounded-lg md:max-w-85 px-3 lg:px-5 py-4 mt-10 md:mt-0 text-sm">
+              <p className="text-lg text-center font-bold mb-3">Bill Details</p>
+              <div className="border-b-1 border-gray-300 mb-2">
+                <div className="flex justify-between mb-2">
+                  <p>Item total</p>
+                  <div className="flex items-center">
+                    <IndianRupee size={14} />
+                    <p>{itemTotal}</p>
+                  </div>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <p>Delivery Fee</p>
+                  <div className="flex items-center">
+                    <IndianRupee size={14} />
+                    <p>40</p>
+                  </div>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <p>Taxes</p>
+                  <div className="flex items-center">
+                    <IndianRupee size={14} />
+                    <p>{itemTotal * 0.05}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between font-semibold mb-4">
+                <p>Item total</p>
+                <div className="flex items-center">
+                  <IndianRupee size={14} />
+                  <p>{totalAmount}</p>
+                </div>
+              </div>
+              <button className="bg-yellow-400 w-full text-sm text-center font-semibold px-3 py-1.5 rounded-full cursor-pointer">
+                Proceed to Checkout
+              </button>
+            </div>
+          </div>
         ) : (
-          <p className="text-lg font-semibold">
-            Oops! We couldn't find what you were looking for.
-          </p>
+          <p className="font-semibold text-lg mt-10">Cart is Empty!!</p>
         )}
       </div>
 
-      <Footer />
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 };
 
-export default Search;
+export default Cart;
