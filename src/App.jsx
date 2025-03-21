@@ -7,6 +7,7 @@ import GetStarted from "./Frontend/New-partner/GetStarted";
 import Step1 from "./Frontend/New-partner/Step1";
 import Step2 from "./Frontend/New-partner/Step2";
 import Cart from "./Frontend/Cart";
+import Step3 from "./Frontend/New-partner/Step3";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
         <Route path="/new-partner/get-started" element={<GetStarted />} />
         <Route path="/new-partner/step1" element={<Step1 />} />
         <Route path="/new-partner/step2" element={<Step2 />} />
-        <Route path="/cart" element={<Cart/>} />
+        <Route path="/new-partner/step3" element={<Step3 />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </Router>
   );

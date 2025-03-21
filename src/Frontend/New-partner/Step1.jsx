@@ -22,29 +22,29 @@ const Step1 = () => {
               </h4>
             </div>
             <div className="flex items-center px-3 border-l-4 border-red-400 mb-5">
-              <div className="bg-gray-300 rounded-[50%] p-1.5 mr-2.5">
-                <ConciergeBell size={35} color="gold" />
+              <div className="bg-red-300 border-3 border-red-600 rounded-[50%] p-1.5 mr-2.5">
+                <ConciergeBell size={35} color="yellow" />
               </div>
               <p>Restaurant information</p>
             </div>
             <div className="flex items-center px-4 mb-5">
-              <div className="bg-gray-300 rounded-[50%] p-1.5 mr-2.5">
+              <div className="bg-gray-300 border-3 border-gray-600 rounded-[50%] p-1.5 mr-2.5">
                 <ClipboardList size={35} />
               </div>
               <p>Menu and operational details</p>
             </div>
             <div className="flex items-center px-4 mb-5">
-              <div className="bg-gray-300 rounded-[50%] p-1.5 mr-2.5">
+              <div className="bg-gray-300 border-3 border-gray-600 rounded-[50%] p-1.5 mr-2.5">
                 <ShieldCheck size={35} />
               </div>
-              <p>Submit</p>
+              <p>Restaurant documents</p>
             </div>
           </div>
 
           <div className="flex-1 md:flex-[65%] ml-3.5">
             <h1 className="text-4xl font-bold mb-8">Restaurant Information</h1>
 
-            <div className="bg-white rounded-lg mb-8 py-6 px-">
+            <div className="bg-white rounded-lg mb-8 py-6">
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
                 <h3 className="text-2xl font-semibold">Restaurant Name</h3>
                 <p className="text-sm text-gray-400">
@@ -91,7 +91,7 @@ const Step1 = () => {
                   </div>
                   <input
                     type="tel"
-                    placeholder="Phone number"
+                    placeholder="Phone number*"
                     required
                     className="flex-grow outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 ml-1.5 shadow-sm"
                   />
