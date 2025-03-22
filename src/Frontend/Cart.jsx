@@ -218,12 +218,15 @@ const Cart = () => {
               {cartItems.map((item) => (
                 <CartItem key={item.id} item={item} />
               ))}
-              <div className="flex flex-row items-center justify-end text-lg my-4 text-right">
-                <p className="mr-2">Subtotal: </p>
+              <div className="flex flex-row items-center justify-between text-lg my-4 text-right">
                 <div className="flex items-center">
+                  <p className="mr-2">Subtotal: </p>
                   <IndianRupee size={16} />
                   <p>{itemTotal}</p>
                 </div>
+                <button className="hidden md:block bg-yellow-400 mt-3 w-fit text-sm text-center font-semibold px-5 py-1.5 rounded-full cursor-pointer">
+                  Proceed to Checkout
+                </button>
               </div>
             </div>
 
