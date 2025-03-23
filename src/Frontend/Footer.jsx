@@ -4,7 +4,7 @@ import { Linkedin, Github, Mail, Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-8 mt-28">
+    <footer className="bg-gray-900 text-white py-8 mt-28 w-full">
       <div className="container mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo & Description */}
