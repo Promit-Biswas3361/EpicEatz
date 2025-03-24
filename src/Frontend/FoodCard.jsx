@@ -11,7 +11,7 @@ const FoodCard = ({ dish }) => {
       <div className="flex flex-col pb-5 border-b-3 border-dotted text-gray-700">
         <p className="font-bold">By {dish.restaurant_name}</p>
         <div className="flex flex-row items-center">
-          <Star size={16} fill="gold"/>
+          <Star size={16} fill="gold" />
           <p className="ml-2">{dish.restaurant_rating}</p>
         </div>
       </div>
@@ -32,9 +32,9 @@ const FoodCard = ({ dish }) => {
         <div className="flex flex-col items-center relative">
           <div className="rounded-2xl overflow-hidden">
             <img
-              src="/EpicEatz_logo.png"
+              src={dish.item.img}
               alt={dish.item.name}
-              className="h-50 w-auto bg-red-200"
+              className="h-50 max-w-45 bg-red-200"
             />
           </div>
 
