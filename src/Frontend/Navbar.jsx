@@ -41,7 +41,7 @@ const Navbar = () => {
 
       {login ? (
         <div className="mr-2 flex flex-row justify-end items-center">
-          <NavLink to="/favourites" className="mx-3">
+          <NavLink to="/account/favourites" className="mx-3">
             <Heart
               color="white"
               className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
@@ -53,7 +53,7 @@ const Navbar = () => {
               className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
             />
           </NavLink>
-          <NavLink to="/account" className="mx-3">
+          <NavLink to="/account/orders" className="mx-3">
             <CircleUser
               color="white"
               className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"

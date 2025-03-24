@@ -13,7 +13,7 @@ const result = [
       name: "Paneer Butter Masala",
       price: 250,
       category: "Veg",
-      img: "https://example.com/paneer-butter-masala.jpg",
+      img: "https://myfoodstory.com/wp-content/uploads/2021/07/restaurant-style-paneer-butter-masala-2-500x500.jpg",
     },
   },
   {
@@ -24,7 +24,7 @@ const result = [
       name: "Chicken Biryani",
       price: 320,
       category: "Non Veg",
-      img: "https://example.com/chicken-biryani.jpg",
+      img: "https://blendofspicesbysara.com/wp-content/uploads/2020/10/PXL_20201011_200951855.PORTRAIT-01.jpeg",
     },
   },
   {
@@ -35,7 +35,7 @@ const result = [
       name: "Creamy Alfredo Pasta",
       price: 280,
       category: "Veg",
-      img: "https://example.com/alfredo-pasta.jpg",
+      img: "https://www.halfbakedharvest.com/wp-content/uploads/2021/04/One-Pot-Creamy-Penne-Alfredo-with-Spicy-Arugula-1.jpg",
     },
   },
   {
@@ -46,7 +46,7 @@ const result = [
       name: "Cheese Burger",
       price: 180,
       category: "Non Veg",
-      img: "https://example.com/cheese-burger.jpg",
+      img: "https://assets.epicurious.com/photos/5c745a108918ee7ab68daf79/1:1/w_2560%2Cc_limit/Smashburger-recipe-120219.jpg",
     },
   },
   {
@@ -57,7 +57,7 @@ const result = [
       name: "Salmon Sushi",
       price: 450,
       category: "Non Veg",
-      img: "https://example.com/salmon-sushi.jpg",
+      img: "https://aisforappleau.com/wp-content/uploads/2023/07/how-to-make-sushi-salmon-nigiri-6.jpg",
     },
   },
   {
@@ -68,7 +68,7 @@ const result = [
       name: "Vegan Bowl",
       price: 220,
       category: "Veg",
-      img: "https://example.com/vegan-bowl.jpg",
+      img: "https://minimalistbaker.com/wp-content/uploads/2015/04/30-minute-CHICKPEA-Sweet-Potato-BUDDHA-Bowls-A-complete-meal-packed-with-protein-fiber-and-healthy-fats-with-a-STELLAR-Tahini-Lemon-Maple-Sauce-vegan-glutenfree-healthy.jpg",
     },
   },
   {
@@ -79,7 +79,7 @@ const result = [
       name: "Tandoori Chicken",
       price: 350,
       category: "Non Veg",
-      img: "https://example.com/tandoori-chicken.jpg",
+      img: "https://www.hungrylankan.com/wp-content/uploads/2022/12/dosa-and-sambar-1-500x500.jpg",
     },
   },
   {
@@ -90,7 +90,7 @@ const result = [
       name: "Margherita Pizza",
       price: 300,
       category: "Veg",
-      img: "https://example.com/margherita-pizza.jpg",
+      img: "https://safrescobaldistatic.blob.core.windows.net/media/2022/11/PIZZA-MARGHERITA.jpg",
     },
   },
   {
@@ -101,7 +101,7 @@ const result = [
       name: "Pani Puri",
       price: 80,
       category: "Veg",
-      img: "https://example.com/pani-puri.jpg",
+      img: "https://cdn1.foodviva.com/static-content/food-images/snacks-recipes/pani-puri/pani-puri.jpg",
     },
   },
   {
@@ -112,7 +112,7 @@ const result = [
       name: "Grilled Steak",
       price: 600,
       category: "Non Veg",
-      img: "https://example.com/grilled-steak.jpg",
+      img: "https://www.halfbakedharvest.com/wp-content/uploads/2018/06/Korean-Grilled-Steak-with-Toasted-Sesame-Chimichurri-1.jpg",
     },
   },
   {
@@ -123,7 +123,7 @@ const result = [
       name: "Masala Dosa",
       price: 150,
       category: "Veg",
-      img: "https://example.com/masala-dosa.jpg",
+      img: "https://i0.wp.com/binjalsvegkitchen.com/wp-content/uploads/2015/12/Masala-Dosa-L1.jpg?resize=600%2C900&ssl=1",
     },
   },
   {
@@ -134,7 +134,7 @@ const result = [
       name: "Garlic Butter Prawns",
       price: 500,
       category: "Non Veg",
-      img: "https://example.com/garlic-prawns.jpg",
+      img: "https://headbangerskitchen.com/wp-content/uploads/2023/01/BGPRAWNS-Vertical.jpg",
     },
   },
   {
@@ -145,7 +145,7 @@ const result = [
       name: "Chocolate Lava Cake",
       price: 220,
       category: "Veg",
-      img: "https://example.com/lava-cake.jpg",
+      img: "https://bluebowlrecipes.com/wp-content/uploads/2022/01/molten-chocolate-lava-cakes-for-two-7641.jpg",
     },
   },
   {
@@ -156,7 +156,7 @@ const result = [
       name: "BBQ Chicken Wings",
       price: 270,
       category: "Non Veg",
-      img: "https://example.com/bbq-wings.jpg",
+      img: "https://iamhomesteader.com/wp-content/uploads/2023/02/bbq-wings.jpg",
     },
   },
   {
@@ -167,7 +167,7 @@ const result = [
       name: "Cappuccino",
       price: 150,
       category: "Veg",
-      img: "https://example.com/cappuccino.jpg",
+      img: "https://www.allrecipes.com/thmb/chsZz0jqIHWYz39ViZR-9k_BkkE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8624835-how-to-make-a-cappuccino-beauty-4x3-0301-13d55eaad60b42058f24369c292d4ccb.jpg",
     },
   },
 ];

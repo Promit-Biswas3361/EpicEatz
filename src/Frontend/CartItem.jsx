@@ -5,13 +5,14 @@ import { IndianRupee } from "lucide-react";
 
 const CartItem = ({ item }) => {
   const [count, setCount] = useState(item.item.qty);
+
   return (
     <div className="flex flex-col sm:flex-row mb-3 lg:mb-5 border-gray-300 border-b-1 justify-between py-5 lg:py-7 px-4 lg:px-6">
       <div className="flex flex-col rounded-2xl overflow-hidden items-center">
         <img
-          src="/EpicEatz_logo.png"
+          src={item.item.img}
           alt="Item image"
-          className="h-40 lg:h-45 w-auto min-w-30 mb-1.5 sm:mb-0"
+          className="h-40 lg:h-45 w-45 mb-1.5 sm:mb-0"
         />
       </div>
       <div className="flex flex-col justify-between sm:ml-8 flex-grow">
