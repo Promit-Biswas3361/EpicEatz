@@ -8,7 +8,10 @@ const SidePanel = () => {
       <NavLink
         to="/account/orders"
         className={({ isActive }) =>
-          [isActive && "bg-white", "py-4 mb-3 pl-2 pr-15"].join(" ")
+          [
+            isActive && "bg-white",
+            "py-4 mb-3 max-sm:py-2 max-sm:mb-1.5 pl-2 pr-15",
+          ].join(" ")
         }
       >
         <div className="flex items-center">
@@ -22,7 +25,10 @@ const SidePanel = () => {
       <NavLink
         to="/account/favourites"
         className={({ isActive }) =>
-          [isActive && "bg-white", "py-4 mb-3 pl-2 pr-15"].join(" ")
+          [
+            isActive && "bg-white",
+            "py-4 mb-3 max-sm:py-2 max-sm:mb-1.5 pl-2 pr-15",
+          ].join(" ")
         }
       >
         <div className="flex items-center">
@@ -36,7 +42,10 @@ const SidePanel = () => {
       <NavLink
         to="/account/addresses"
         className={({ isActive }) =>
-          [isActive && "bg-white", "py-4 mb-3 pl-2 pr-15"].join(" ")
+          [
+            isActive && "bg-white",
+            "py-4 mb-3 max-sm:py-2 max-sm:mb-1.5 pl-2 pr-15",
+          ].join(" ")
         }
       >
         <div className="flex items-center">
@@ -50,7 +59,10 @@ const SidePanel = () => {
       <NavLink
         to="/account/settings"
         className={({ isActive }) =>
-          [isActive && "bg-white", "py-4 mb-3 pl-2 pr-15"].join(" ")
+          [
+            isActive && "bg-white",
+            "py-4 mb-3 max-sm:py-2 max-sm:mb-1.5 pl-2 pr-15",
+          ].join(" ")
         }
       >
         <div className="flex items-center">
