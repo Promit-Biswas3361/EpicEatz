@@ -20,11 +20,11 @@ const Account = () => {
           </div>
         </div>
 
-        <div className="bg-white flex pt-8 px-8">
-          <div className="bg-gray-200">
+        <div className="bg-white sm:flex max-sm:pb-5 pt-8 px-8">
+          <div className="bg-gray-200 z-40 max-sm:mb-10">
             <SidePanel />
           </div>
-          <div className="">
+          <div className="sm:ml-5 md:ml-10 xl:ml-15 sm:mr-6 md:mr-10 flex-grow">
             <Outlet />
           </div>
         </div>
