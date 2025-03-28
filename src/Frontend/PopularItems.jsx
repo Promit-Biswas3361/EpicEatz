@@ -1,8 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const PopularItems = ({ name, url }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="cursor-pointer text-center w-max-45 h-auto mx-3 md:mx-5 lg:mx-7 mb-10">
+    <div
+      className="cursor-pointer text-center w-max-45 h-auto mx-3 md:mx-5 lg:mx-7 mb-10"
+      onClick={() => navigate(`/dish/${name}`)}
+    >
       <img
         src={url}
         alt={name}

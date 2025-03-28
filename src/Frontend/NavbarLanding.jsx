@@ -1,10 +1,36 @@
 import React, { useState } from "react";
 import { Search, CircleUser, ShoppingCart, Heart } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import Login from "./Login";
+import Signup from "./Signup";
 
 const NavbarLanding = () => {
   const [input, setInput] = useState("");
   const [login, setLogin] = useState(false);
+  const [loginVisible, setLoginVisible] = useState(false);
+  const [signupVisible, setSignupVisible] = useState(false);
+
+  const openLogin = () => {
+    setLoginVisible(true);
+  };
+
+  const closeLogin = () => {
+    setLoginVisible(false);
+  };
+
+  const openSignup = () => {
+    setSignupVisible(true);
+  };
+
+  const closeSignup = () => {
+    setSignupVisible(false);
+  };
+
+  const authSuccess = () => {
+    setLogin(true);
+    setLoginVisible(false);
+    setSignupVisible(false);
+  };
 
   return (
     <div className="relative bg-[url(/bg.jpeg)] w-full h-110 bg-cover bg-left bg-no-repeat">
@@ -38,14 +64,14 @@ const NavbarLanding = () => {
             Add Restaurant
           </NavLink>
           <NavLink
-            to="/login"
             className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
+            onClick={openLogin}
           >
             Login
           </NavLink>
           <NavLink
-            to="/register"
             className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-full mx-2 hover:bg-red-500"
+            onClick={openSignup}
           >
             SignUp
           </NavLink>
@@ -85,6 +111,10 @@ const NavbarLanding = () => {
           />
         </div>
       </div>
+      {loginVisible && <Login onClose={closeLogin} authSuccess={authSuccess} />}
+      {signupVisible && (
+        <Signup onClose={closeSignup} authSuccess={authSuccess} />
+      )}
     </div>
   );
 };
