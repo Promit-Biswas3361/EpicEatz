@@ -1,10 +1,37 @@
 import React, { useState } from "react";
 import { Search, CircleUser, ShoppingCart, Heart } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
+import Login from "./Login";
+import Signup from "./Signup";
 
 const Navbar = () => {
   const [input, setInput] = useState("");
   const [login, setLogin] = useState(false);
+  const [loginVisible, setLoginVisible] = useState(false);
+  const [signupVisible, setSignupVisible] = useState(false);
+
+  const openLogin = () => {
+    setLoginVisible(true);
+  };
+
+  const closeLogin = () => {
+    setLoginVisible(false);
+  };
+
+  const openSignup = () => {
+    setSignupVisible(true);
+  };
+
+  const closeSignup = () => {
+    setSignupVisible(false);
+  };
+
+  const authSuccess = () => {
+    setLogin(true);
+    setLoginVisible(false);
+    setSignupVisible(false);
+  };
+
   return (
     <div className="flex flex-row justify-between w-full h-auto bg-red-200 items-center fixed top-0 z-50">
       <div className="">
@@ -63,19 +90,25 @@ const Navbar = () => {
       ) : (
         <div className="flex flex-row justify-end">
           <NavLink
-            to="/login"
             className="text-red-600 md:text-lg bg-white p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-gray-200"
+            onClick={openLogin}
           >
             Login
           </NavLink>
           <NavLink
-            to="/register"
             className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-red-500"
+            onClick={openSignup}
           >
             SignUp
           </NavLink>
         </div>
       )}
+
+      {loginVisible && <Login onClose={closeLogin} authSuccess={authSuccess} />}
+      {signupVisible && (
+        <Signup onClose={closeSignup} authSuccess={authSuccess} />
+      )}
+      
     </div>
   );
 };
