@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IndianRupee, CircleSmall } from "lucide-react";
+import OrderDetails from "./OrderDetails";
 
 const newOrders = [
   {
@@ -24,7 +25,10 @@ const newOrders = [
     total: 824,
     status: "Delivered",
     date: "2025-03-14",
-    address: "123 Pizza Street, New York, NY 10001",
+    address: {
+      label: "Home Address",
+      address: "123 Main Street, Apartment 4B, New York, NY 10001",
+    },
   },
   {
     id: 2,
@@ -33,7 +37,7 @@ const newOrders = [
       {
         name: "Salmon Roll",
         price: 450,
-        category: "Non-Veg",
+        category: "Non Veg",
         img: "https://www.allrecipes.com/thmb/-QGvCN5xwJBpQfoa4OY6Cvh66Cw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1437018-Spicy-Salmon-Sushi-Roll-ddmfs-4x3-2c496fdfd3e14bc78a9ab67036221918.jpg",
         qty: 3,
       },
@@ -48,7 +52,10 @@ const newOrders = [
     total: 1584,
     status: "Cancelled",
     date: "2025-03-12",
-    address: "456 Sushi Avenue, Los Angeles, CA 90001",
+    address: {
+      label: "Office Address",
+      address: "456 Corporate Blvd, Suite 1203, San Francisco, CA 94105",
+    },
   },
   {
     id: 3,
@@ -65,10 +72,12 @@ const newOrders = [
     total: 828,
     status: "Pending",
     date: "2025-03-10",
-    address: "789 Coffee Road, Chicago, IL 60007",
+    address: {
+      label: "Summer House",
+      address: "789 Beachfront Road, Unit 5, Miami Beach, FL 33139",
+    },
   },
 ];
-
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -81,6 +90,7 @@ const formatDate = (dateString) => {
 
 const Orders = () => {
   const [orders, setOrders] = useState(newOrders);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const cancelOrder = (id) => {
     const updatedOrders = orders.map((order) =>
@@ -90,6 +100,14 @@ const Orders = () => {
     );
 
     setOrders(updatedOrders);
+  };
+
+  const viewOrderDetails = (order) => {
+    setSelectedOrder(order);
+  };
+
+  const closeOrderDetails = () => {
+    setSelectedOrder(null);
   };
 
   return (
@@ -109,7 +127,10 @@ const Orders = () => {
                   <p>{formatDate(order.date)}</p>
                 </div>
 
-                <div className="cursor-pointer font-bold text-orange-500 hover:text-orange-700 mb-1.5">
+                <div
+                  className="cursor-pointer font-bold text-orange-500 hover:text-orange-700 mb-1.5"
+                  onClick={() => viewOrderDetails(order)}
+                >
                   <p>View Details</p>
                 </div>
               </div>
@@ -162,6 +183,10 @@ const Orders = () => {
           </div>
         ))}
       </div>
+
+      {selectedOrder && (
+        <OrderDetails order={selectedOrder} onClose={closeOrderDetails} />
+      )}
     </div>
   );
 };
