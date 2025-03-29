@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../Redux/loginSlice";
+import { loginSuccess, loginFailure } from "../Redux/loginSlice";
 
 const Login = ({ onClose, authSuccess }) => {
   const [email, setEmail] = useState("");

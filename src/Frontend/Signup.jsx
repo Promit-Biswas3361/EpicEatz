@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess, loginFailure } from "../Redux/loginSlice";
 
 function Signup({ onClose, authSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [isVisible, setIsVisible] = useState(true);
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -15,6 +18,11 @@ function Signup({ onClose, authSuccess }) {
       document.body.style.overflow = "auto";
     };
   }, []);
+
+  const handleSignup = () => {
+    dispatch(loginSuccess({ email }));
+    authSuccess();
+  };
 
   return (
     <div className="fixed inset-0 bg-transparent bg-opacity-40 backdrop-blur-md z-40">
@@ -25,7 +33,7 @@ function Signup({ onClose, authSuccess }) {
         </div>
         <form
           className="flex flex-col justify-center pb-4 border-b-1 border-gray-400 mb-4"
-          onSubmit={authSuccess}
+          onSubmit={handleSignup}
         >
           <input
             type="email"
