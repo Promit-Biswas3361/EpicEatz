@@ -76,6 +76,28 @@ const Step3 = () => {
                 />
               </div>
             </div>
+            <div className="bg-white rounded-lg mb-8 py-6">
+              <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
+                <h3 className="text-2xl font-semibold">Complete your Registration</h3>
+                <p className="text-sm text-gray-400">
+                  Enter password to complete registration process of your restaurant.
+                </p>
+              </div>
+              <div className="px-5">
+                <input
+                  type="password"
+                  required
+                  placeholder="New Password*"
+                  className="w-full outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm mb-3"
+                />
+                <input
+                  type="password"
+                  required
+                  placeholder="Confirm Password*"
+                  className="w-full outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm mb-3"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
