@@ -3,12 +3,14 @@ import { Search, CircleUser, ShoppingCart, Heart } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
+import { useSelector } from "react-redux";
 
 const NavbarLanding = () => {
   const [input, setInput] = useState("");
-  const [login, setLogin] = useState(false);
   const [loginVisible, setLoginVisible] = useState(false);
   const [signupVisible, setSignupVisible] = useState(false);
+
+  const { isAuthenticated, user, error } = useSelector((state) => state.login);
 
   const openLogin = () => {
     setLoginVisible(true);
@@ -27,14 +29,13 @@ const NavbarLanding = () => {
   };
 
   const authSuccess = () => {
-    setLogin(true);
     setLoginVisible(false);
     setSignupVisible(false);
   };
 
   return (
     <div className="relative bg-[url(/bg.jpeg)] w-full h-110 bg-cover bg-left bg-no-repeat">
-      {login ? (
+      {isAuthenticated ? (
         <div className="pt-3 pb-10 mr-2 flex flex-row justify-end items-center">
           <NavLink to="/account/favourites" className="mx-3">
             <Heart
