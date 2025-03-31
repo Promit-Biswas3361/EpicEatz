@@ -3,23 +3,23 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+
 const auth = require("./middleware/auth"); // ✅ Import middleware
+
 const app = express();
 
-
-app.use(cors({ origin: "http://localhost:5173", credentials: true })); // Allow frontend to access backend
+// ✅ Middleware
+app.use(cors({ origin: "http://localhost:5173", credentials: true })); // Allow frontend access
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Routes
+// ✅ Import Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/food", require("./routes/foodRoutes"));
-const userRoutes = require("./routes/userRoutes.js");
-console.log("🔍 Debug: userRoutes =", userRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/restaurants", require("./routes/restaurantRoutes")); // ✅ Added Restaurant Routes
 
-
-// ✅ Connect to MongoDB
+// ✅ MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))

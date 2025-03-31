@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loginSuccess, loginFailure } from "../Redux/loginSlice";
 
-function Signup({ onClose, authSuccess, openLogin }) {
+function Signup({ onClose, openLogin }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -19,9 +16,28 @@ function Signup({ onClose, authSuccess, openLogin }) {
     };
   }, []);
 
-  const handleSignup = () => {
-    dispatch(loginSuccess({ email }));
-    authSuccess();
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Signup successful! Please log in.");
+        onClose(); // Close signup modal
+        openLogin(); // Open login modal
+      } else {
+        alert(data.message || "Signup failed");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -36,11 +52,19 @@ function Signup({ onClose, authSuccess, openLogin }) {
           onSubmit={handleSignup}
         >
           <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            required
+            className="bg-white border-1 border-gray-400 h-12 rounded mt-8 mb-5 px-3 outline-green-600"
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
             type="email"
             placeholder="Email ID"
             value={email}
             required
-            className="bg-white border-1 border-gray-400 h-12 rounded mt-8 mb-5 px-3 outline-green-600"
+            className="bg-white border-1 border-gray-400 h-12 rounded mb-5 px-3 outline-green-600"
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
