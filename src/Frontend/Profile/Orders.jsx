@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IndianRupee, CircleSmall } from "lucide-react";
+import { IndianRupee, CircleSmall, FlaskRound } from "lucide-react";
 import OrderDetails from "./OrderDetails";
 
 const newOrders = [
@@ -89,7 +89,7 @@ const formatDate = (dateString) => {
 };
 
 const Orders = () => {
-  const [orders, setOrders] = useState(newOrders);
+  const [orders, setOrders] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const cancelOrder = (id) => {
@@ -112,76 +112,81 @@ const Orders = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-extrabold mb-10">Past Orders</h3>
+      <h3 className="text-2xl font-extrabold mb-8">Past Orders</h3>
 
       <div className="">
-        {orders.map((order) => (
-          <div key={order.id} className="border-1 border-gray-400 p-3 mb-4">
-            <div className="flex justify-between border-b-3 border-dotted border-gray-200 mb-3">
-              <div className="flex-grow">
-                <p className="text-lg font-semibold">{order.restaurant}</p>
+        {!(orders && orders.length > 0) && (
+          <p className="text-lg">No orders found!!</p>
+        )}
+        {orders &&
+          orders.length > 0 &&
+          orders.map((order) => (
+            <div key={order.id} className="border border-gray-400 p-3 mb-4">
+              <div className="flex justify-between border-b-3 border-dotted border-gray-200 mb-3">
+                <div className="flex-grow">
+                  <p className="text-lg font-semibold">{order.restaurant}</p>
 
-                <div className="flex text-xs text-gray-500 mb-3">
-                  <p className="mr-1">Order #{order.id}</p>
-                  <p className="mr-1"> | </p>
-                  <p>{formatDate(order.date)}</p>
-                </div>
+                  <div className="flex text-xs text-gray-500 mb-3">
+                    <p className="mr-1">Order #{order.id}</p>
+                    <p className="mr-1"> | </p>
+                    <p>{formatDate(order.date)}</p>
+                  </div>
 
-                <div
-                  className="cursor-pointer font-bold text-orange-500 hover:text-orange-700 mb-1.5"
-                  onClick={() => viewOrderDetails(order)}
-                >
-                  <p>View Details</p>
-                </div>
-              </div>
-              <div className="flex items-center h-fit border-1 border-gray-200 rounded-full px-2">
-                <CircleSmall
-                  size={13}
-                  color={
-                    order.status === "Delivered"
-                      ? "green"
-                      : order.status === "Pending"
-                      ? "orange"
-                      : order.status === "Cancelled"
-                      ? "red"
-                      : "#6b7280"
-                  }
-                  fill={
-                    order.status === "Delivered"
-                      ? "green"
-                      : order.status === "Pending"
-                      ? "orange"
-                      : order.status === "Cancelled"
-                      ? "red"
-                      : "#6b7280"
-                  }
-                />
-                <p className="ml-1 text-sm">{order.status}</p>
-              </div>
-            </div>
-            <div className="">
-              <div className="flex justify-between">
-                <p>Total items: {order.items.length}</p>
-                <div className="flex items-center">
-                  <p className="mr-1.5">Amount:</p>
-                  <IndianRupee size={14} />
-                  <p> {order.total}</p>
-                </div>
-              </div>
-
-              {order.status === "Pending" && (
-                <div className="text-center mt-3">
-                  <button
-                    className="bg-red-500 rounded-lg cursor-pointer px-2.5 py-1 text-white hover:bg-red-600"
-                    onClick={() => cancelOrder(order.id)}
+                  <div
+                    className="cursor-pointer font-bold text-orange-500 hover:text-orange-700 mb-1.5"
+                    onClick={() => viewOrderDetails(order)}
                   >
-                    CANCEL
-                  </button>
+                    <p>View Details</p>
+                  </div>
                 </div>
-              )}
+                <div className="flex items-center h-fit border-1 border-gray-200 rounded-full px-2">
+                  <CircleSmall
+                    size={13}
+                    color={
+                      order.status === "Delivered"
+                        ? "green"
+                        : order.status === "Pending"
+                        ? "orange"
+                        : order.status === "Cancelled"
+                        ? "red"
+                        : "#6b7280"
+                    }
+                    fill={
+                      order.status === "Delivered"
+                        ? "green"
+                        : order.status === "Pending"
+                        ? "orange"
+                        : order.status === "Cancelled"
+                        ? "red"
+                        : "#6b7280"
+                    }
+                  />
+                  <p className="ml-1 text-sm">{order.status}</p>
+                </div>
+              </div>
+              <div className="">
+                <div className="flex justify-between">
+                  <p>Total items: {order.items.length}</p>
+                  <div className="flex items-center">
+                    <p className="mr-1.5">Amount:</p>
+                    <IndianRupee size={14} />
+                    <p> {order.total}</p>
+                  </div>
+                </div>
+
+                {order.status === "Pending" && (
+                  <div className="text-center mt-3">
+                    <button
+                      className="bg-red-500 rounded-lg cursor-pointer px-2.5 py-1 text-white hover:bg-red-600"
+                      onClick={() => cancelOrder(order.id)}
+                    >
+                      CANCEL
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
 
       {selectedOrder && (

@@ -4,7 +4,7 @@ import { Dot, Heart, Settings, MapPinHouse, PackageOpen } from "lucide-react";
 
 const SidePanel = () => {
   return (
-    <div className="flex flex-col pl-5 pr-0.75 py-3 sticky opacity-80">
+    <div className="flex flex-col pl-5 pr-0.75 py-3 sticky opacity-80 bg-gray-300">
       <NavLink
         to="/account/orders"
         className={({ isActive }) =>
