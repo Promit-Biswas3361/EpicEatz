@@ -43,7 +43,7 @@ const Login = ({ onClose, authSuccess, openSignup }) => {
           console.warn("authSuccess is not a function");
         }
 
-        navigate("/account"); // Redirect to account page
+        navigate("/"); // Redirect to account page
       } else {
         alert(data.message || "Login failed");
         dispatch(loginFailure());
