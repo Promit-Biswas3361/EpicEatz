@@ -13,14 +13,14 @@ import Orders from "./Frontend/Profile/Orders";
 import Favourites from "./Frontend/Profile/Favourites";
 import Settings from "./Frontend/Profile/Settings";
 import Address from "./Frontend/Profile/Address";
+import Checkout from "./Frontend/Checkout";
+import OrderConfirmation from "./Frontend/OrderConfirmation";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Signup />} />
         <Route path="/dish/:id" element={<Search />} />
         <Route path="/restaurant/:id" element={<Search />} />
         <Route path="/new-partner/get-started" element={<GetStarted />} />
@@ -28,6 +28,8 @@ function App() {
         <Route path="/new-partner/step2" element={<Step2 />} />
         <Route path="/new-partner/step3" element={<Step3 />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
         <Route path="/account" element={<Account />}>
           <Route path="orders" element={<Orders />} />

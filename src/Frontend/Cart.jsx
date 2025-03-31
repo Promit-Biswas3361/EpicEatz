@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CartItem from "./CartItem";
 import { IndianRupee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const cart = [
   {
@@ -192,6 +193,8 @@ const Cart = () => {
   const [itemTotal, setItemTotal] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (cartItems && cartItems.length > 0) {
       let total = cartItems.reduce(
@@ -204,6 +207,20 @@ const Cart = () => {
     }
   }, [cartItems]);
 
+  const updateItemQty = (id, newQty) => {
+    if (newQty === 0) {
+      setCartItems(cartItems.filter((item) => item.id !== id));
+    } else {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === id
+            ? { ...item, item: { ...item.item, qty: newQty } }
+            : item
+        )
+      );
+    }
+  };
+
   return (
     <div className="w-full min-h-screen flex flex-col bg-gray-100">
       <Navbar />
@@ -212,11 +229,15 @@ const Cart = () => {
         <p className="text-2xl md:text-3xl font-bold text-center">
           Shopping Cart
         </p>
-        {cartItems ? (
+        {cartItems && cartItems.length > 0 ? (
           <div className="py-8 sm:mt-5 md:flex">
             <div className="flex flex-col md:flex-2/3 bg-white rounded-lg px-4 lg:px-7">
               {cartItems.map((item) => (
-                <CartItem key={item.id} item={item} />
+                <CartItem
+                  key={item.id}
+                  item={item}
+                  updateItemQty={updateItemQty}
+                />
               ))}
               <div className="flex flex-row items-center justify-between text-lg my-4 text-right">
                 <div className="flex items-center">
@@ -224,7 +245,12 @@ const Cart = () => {
                   <IndianRupee size={16} />
                   <p>{itemTotal}</p>
                 </div>
-                <button className="hidden md:block bg-yellow-400 mt-3 w-fit text-sm text-center font-semibold px-5 py-1.5 rounded-full cursor-pointer">
+                <button
+                  className="hidden md:block bg-yellow-400 mt-3 w-fit text-sm text-center font-semibold px-5 py-1.5 rounded-full cursor-pointer"
+                  onClick={() =>
+                    navigate("/checkout", { state: { totalAmount } })
+                  }
+                >
                   Proceed to Checkout
                 </button>
               </div>
@@ -262,7 +288,10 @@ const Cart = () => {
                   <p>{totalAmount}</p>
                 </div>
               </div>
-              <button className="bg-yellow-400 w-full text-sm text-center font-semibold px-3 py-1.5 rounded-full cursor-pointer">
+              <button
+                className="bg-yellow-400 w-full text-sm text-center font-semibold px-3 py-1.5 rounded-full cursor-pointer"
+                onClick={() => navigate("/checkout", { state: { totalAmount } })}
+              >
                 Proceed to Checkout
               </button>
             </div>

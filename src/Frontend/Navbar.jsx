@@ -105,9 +105,19 @@ const Navbar = () => {
         </div>
       )}
 
-      {loginVisible && <Login onClose={closeLogin} authSuccess={authSuccess} />}
+      {loginVisible && (
+        <Login
+          onClose={closeLogin}
+          authSuccess={authSuccess}
+          openSignup={openSignup}
+        />
+      )}
       {signupVisible && (
-        <Signup onClose={closeSignup} authSuccess={authSuccess} />
+        <Signup
+          onClose={closeSignup}
+          authSuccess={authSuccess}
+          openLogin={openLogin}
+        />
       )}
     </div>
   );

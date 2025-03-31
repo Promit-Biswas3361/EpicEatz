@@ -3,8 +3,11 @@ import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 import { IndianRupee } from "lucide-react";
 
-const CartItem = ({ item }) => {
-  const [count, setCount] = useState(item.item.qty);
+const CartItem = ({ item, updateItemQty }) => {
+  const handleQtyChange = (change) => {
+    const newQty = item.item.qty + change;
+    updateItemQty(item.id, newQty);
+  };
 
   return (
     <div className="flex flex-col sm:flex-row mb-3 lg:mb-5 border-gray-300 border-b-1 justify-between py-5 lg:py-7 px-4 lg:px-6">
@@ -32,18 +35,18 @@ const CartItem = ({ item }) => {
         </div>
 
         <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg text-lg font-bold text-green-600 max-w-30 text-center mb-5 sm:mb-0">
-          {count > 0 ? (
+          {item.item.qty > 0 ? (
             <div className="flex flex-row justify-between">
               <button
                 className="cursor-pointer mr-5"
-                onClick={() => setCount(count - 1)}
+                onClick={() => handleQtyChange(-1)}
               >
                 -
               </button>
-              <p>{count}</p>
+              <p>{item.item.qty}</p>
               <button
                 className="cursor-pointer ml-5"
-                onClick={() => setCount(count + 1)}
+                onClick={() => handleQtyChange(1)}
               >
                 +
               </button>
@@ -51,7 +54,7 @@ const CartItem = ({ item }) => {
           ) : (
             <button
               className="cursor-pointer"
-              onClick={() => setCount(count + 1)}
+              onClick={() => handleQtyChange(1)}
             >
               ADD
             </button>

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess, loginFailure } from "../Redux/loginSlice";
 
-const Login = ({ onClose, authSuccess }) => {
+const Login = ({ onClose, authSuccess, openSignup }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Login = ({ onClose, authSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-transparent bg-opacity-40 backdrop-blur-md z-40">
-      <div className="bg-red-100 w-130 flex flex-col px-7 py-2 rounded-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl">
+      <div className="bg-red-100 w-90 sm:w-115 md:w-130 max-w-screen flex flex-col px-7 py-2 rounded-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl">
         <div className="flex flex-row justify-between items-center">
           <h1 className="text-3xl text-gray-600 font-semibold">Login</h1>
           <X className="text-gray-600 cursor-pointer" onClick={onClose} />
@@ -58,7 +58,13 @@ const Login = ({ onClose, authSuccess }) => {
         <div className="flex flex-row text-[15px]">
           <p className="text-gray-600">
             New to EpicEatz?{" "}
-            <Link to="/register" className="text-red-500">
+            <Link
+              className="text-red-500"
+              onClick={() => {
+                onClose();
+                openSignup();
+              }}
+            >
               Create Account
             </Link>
           </p>
