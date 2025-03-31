@@ -15,6 +15,8 @@ import Settings from "./Frontend/Profile/Settings";
 import Address from "./Frontend/Profile/Address";
 import Checkout from "./Frontend/Checkout";
 import OrderConfirmation from "./Frontend/OrderConfirmation";
+import AboutUs from "./Frontend/AboutUs";
+import Contact from "./Frontend/Contact";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<Contact />} />
 
         <Route path="/account" element={<Account />}>
           <Route path="orders" element={<Orders />} />

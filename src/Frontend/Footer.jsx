@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo & Description */}
           <div className="flex flex-col space-y-4">
-            <h2 className="text-2xl font-bold text-yellow-400">EpicEatz</h2>
+            <h2 className="text-2xl font-bold text-yellow-500">EpicEatz</h2>
             <p className="text-gray-400">
               Delicious meals delivered to your doorstep. Order now and satisfy
               your cravings!
@@ -18,27 +18,27 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-xl font-semibold text-yellow-400">
+            <h3 className="text-xl font-semibold text-yellow-500">
               Quick Links
             </h3>
             <ul className="mt-2 space-y-2">
               <li>
-                <Link href="#" className="text-gray-400 hover:text-yellow-300">
+                <Link to="/" className="text-gray-400 hover:text-yellow-300">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-400 hover:text-yellow-300">
+                <Link to="/#" className="text-gray-400 hover:text-yellow-300">
                   Menu
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-400 hover:text-yellow-300">
+                <Link to="/about" className="text-gray-400 hover:text-yellow-300">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-gray-400 hover:text-yellow-300">
+                <Link to="/contact" className="text-gray-400 hover:text-yellow-300">
                   Contact
                 </Link>
               </li>
