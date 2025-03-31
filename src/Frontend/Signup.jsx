@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess, loginFailure } from "../Redux/loginSlice";
 
-function Signup({ onClose, authSuccess }) {
+function Signup({ onClose, authSuccess, openLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -26,7 +26,7 @@ function Signup({ onClose, authSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-transparent bg-opacity-40 backdrop-blur-md z-40">
-      <div className="bg-red-100 w-130 flex flex-col px-7 py-2 rounded-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl">
+      <div className="bg-red-100 w-90 sm:w-115 md:w-130 max-w-screen flex flex-col px-7 py-2 rounded-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl">
         <div className="flex flex-row justify-between items-center text-gray-600">
           <h1 className="text-3xl font-semibold">Signup</h1>
           <X className="cursor-pointer" onClick={onClose} />
@@ -68,7 +68,13 @@ function Signup({ onClose, authSuccess }) {
         <div className="flex flex-row text-[15px]">
           <p className="text-gray-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-red-500">
+            <Link
+              className="text-red-500"
+              onClick={() => {
+                onClose();
+                openLogin();
+              }}
+            >
               Login
             </Link>
           </p>
