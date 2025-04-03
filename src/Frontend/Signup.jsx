@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { X, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Signup({ onClose, openLogin }) {
@@ -7,7 +7,9 @@ function Signup({ onClose, openLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -15,6 +17,12 @@ function Signup({ onClose, openLogin }) {
       document.body.style.overflow = "auto";
     };
   }, []);
+
+  useEffect(() => {
+      if (passwordRef.current) {
+        passwordRef.current.type = showPassword ? "text" : "password";
+      }
+    }, [showPassword]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -29,8 +37,8 @@ function Signup({ onClose, openLogin }) {
 
       if (response.ok) {
         alert("Signup successful! Please log in.");
-        onClose(); // Close signup modal
-        openLogin(); // Open login modal
+        onClose();
+        openLogin();
       } else {
         alert(data.message || "Signup failed");
       }
@@ -75,14 +83,28 @@ function Signup({ onClose, openLogin }) {
             className="bg-white border-1 border-gray-400 h-12 rounded mb-5 px-3 outline-green-600"
             onChange={(e) => setPhone(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            value={password}
-            className="bg-white border-1 border-gray-400 h-12 rounded mb-5 px-3 outline-green-600"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="flex items-center relative">
+            <input
+              type="password"
+              placeholder="Password"
+              ref={passwordRef}
+              required
+              value={password}
+              className="bg-white w-full border-1 border-gray-400 h-12 rounded mb-5 px-3 outline-green-600"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <div
+              className="absolute z-20 right-3.5 top-3.5 cursor-pointer"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? (
+                <EyeOff color="gray" size={21} />
+              ) : (
+                <Eye color="gray" size={21} />
+              )}
+            </div>
+          </div>
           <input
             type="submit"
             className="bg-[#f75c5c] hover:bg-[#ff2e45] h-12 rounded mb-5 cursor-pointer text-gray-100 text-xl"

@@ -12,7 +12,7 @@ const FavouritesCard = ({ item, onDelete }) => {
   return (
     <div className="border-gray-200 border-1 w-full my-2.5">
       <div className="flex">
-        <div className="flex-1/2 lg:flex-1/6 overflow-hidden mr-3 md:mr-5 relative">
+        <div className="flex-1/2 md:flex-1/3 lg:flex-1/6 overflow-hidden mr-3 md:mr-5 relative">
           <img
             src={item.item.img}
             alt={item.item.name}
