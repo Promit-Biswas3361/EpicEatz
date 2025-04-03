@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Contact = () => {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,13 +30,24 @@ const Contact = () => {
         <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-md">
           <h2 className="text-2xl font-bold mb-5 text-center">Contact Us</h2>
           {submitted ? (
-            <p className="text-green-600 text-center mb-4">
-              ✅ Thank you! Your message has been sent.
-            </p>
+            <div className="flex flex-col items-center">
+              <p className="text-green-600 text-center mb-4">
+                ✅ Thank you! Your message has been sent.
+              </p>
+
+              <button
+                className="bg-yellow-400 w-fit px-4 py-2 rounded-lg cursor-pointer text-white font-semibold"
+                onClick={() => navigate("/")}
+              >
+                Back to Home
+              </button>
+            </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">
+                  Name
+                </label>
                 <input
                   type="text"
                   name="name"
@@ -45,7 +58,9 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">
+                  Email
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -56,7 +71,7 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
+                <label className="block text-sm font-medium mb-1 text-gray-700">
                   Message
                 </label>
                 <textarea
@@ -70,7 +85,7 @@ const Contact = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition"
+                className="w-full bg-orange-500 cursor-pointer text-white font-bold py-2 rounded-lg hover:bg-orange-600 transition"
               >
                 Send Message
               </button>

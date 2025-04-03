@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Star, IndianRupee } from "lucide-react";
+import { Star, IndianRupee, Heart } from "lucide-react";
 import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 
 const FoodCard = ({ dish }) => {
   const [count, setCount] = useState(0);
+  const [favourite, setFavourite] = useState(false);
 
   return (
     <div className="flex flex-col bg-white p-5 rounded-2xl w-80 lg:w-100 mb-5">
@@ -21,7 +22,7 @@ const FoodCard = ({ dish }) => {
             <img src={veg} alt="Veg" className="h-7 w-7" />
           )}
           {dish.item.category == "Non Veg" && (
-            <img src={nonveg} alt="Non Veg" className="h-7 w-7" />
+            <img src={nonveg} alt="Non Veg" className="h-6 w-6" />
           )}
           <p className="text-lg font-bold">{dish.item.name}</p>
           <div className="flex flex-row items-center">
@@ -36,6 +37,13 @@ const FoodCard = ({ dish }) => {
               alt={dish.item.name}
               className="h-50 max-w-45 bg-red-200"
             />
+          </div>
+
+          <div
+            className="absolute top-2 right-2 cursor-pointer"
+            onClick={() => setFavourite((prev) => !prev)}
+          >
+            <Heart color="white" fill={favourite ? "red" : "transparent"} />
           </div>
 
           <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg absolute bottom-[-22px] text-lg font-bold text-green-600">

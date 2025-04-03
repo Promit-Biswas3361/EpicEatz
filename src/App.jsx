@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./Frontend/Landing";
-import Login from "./Frontend/Login";
-import Signup from "./Frontend/Signup";
 import Search from "./Frontend/Search";
 import GetStarted from "./Frontend/New-partner/GetStarted";
 import Step1 from "./Frontend/New-partner/Step1";
