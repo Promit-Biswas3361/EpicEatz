@@ -89,7 +89,7 @@ const formatDate = (dateString) => {
 };
 
 const Orders = () => {
-  const [orders, setOrders] = useState(null);
+  const [orders, setOrders] = useState(newOrders);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const cancelOrder = (id) => {
