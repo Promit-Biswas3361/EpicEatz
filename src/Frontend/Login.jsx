@@ -42,7 +42,7 @@ const Login = ({ onClose, authSuccess, openSignup }) => {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", `Bearer ${data.token}`);
+        localStorage.setItem("token", data.token);
         dispatch(loginSuccess({ email }));
 
         if (typeof authSuccess === "function") {

@@ -2,20 +2,63 @@ import React, { useState } from "react";
 import NavbarPartner from "./NavbarPartner";
 import { ConciergeBell, ClipboardList, ShieldCheck, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Step2 = () => {
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData();
+
+    // Menu items (name and image)
+    for (let i = 0; i < count; i++) {
+      const nameInput = form[`itemName${i}`];
+      const fileInput = form[`itemImage${i}`];
+      if (nameInput?.value) {
+        formData.append("menuItems[]", JSON.stringify({ name: nameInput.value }));
+      }
+      if (fileInput?.files?.[0]) {
+        formData.append("images", fileInput.files[0]);
+      }
+    }
+
+    // Open and close time
+    formData.append("openTime", form.openTime.value);
+    formData.append("closeTime", form.closeTime.value);
+
+    // Open days
+    const openDays = [];
+    for (const input of form.openDays) {
+      if (input.checked) openDays.push(input.value);
+    }
+    formData.append("openDays", JSON.stringify(openDays));
+
+    try {
+      await axios.post("http://localhost:5000/api/user/step2", formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      navigate("/new-partner/step3");
+    } catch (err) {
+      console.error("Submission error:", err);
+    }
+  };
+
   return (
     <div className="bg-gray-100">
       <NavbarPartner />
-
       <form
-        action={() => navigate("/new-partner/step3")}
+        onSubmit={handleSubmit}
         className="mt-16.5 md:mt-21.5 pt-10 pb-30 w-full"
         method="POST"
-        enctype="multipart/form-data"
+        encType="multipart/form-data"
       >
         <div className="flex flex-row justify-center items-start px-10 lg:px-25 xl:px-45 2xl:px-55">
           <div className="hidden md:block md:flex-[35%] mr-3.5 bg-white h-fit rounded-lg pt-3">
@@ -65,12 +108,14 @@ const Step2 = () => {
                   >
                     <input
                       type="text"
+                      name={`itemName${index}`}
                       placeholder="Item name*"
                       required
                       className="w-full outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                     />
                     <input
                       type="file"
+                      name={`itemImage${index}`}
                       accept="image/*"
                       className="w-full text-blue-400 hover:text-blue-600 cursor-pointer"
                     />
@@ -78,6 +123,7 @@ const Step2 = () => {
                 ))}
 
                 <button
+                  type="button"
                   className="rounded-[50%] p-1.5 bg-gray-100 cursor-pointer hover:bg-gray-300"
                   onClick={() => setCount(count + 1)}
                 >
@@ -98,6 +144,7 @@ const Step2 = () => {
                     <p className="font-semibold">Open time</p>
                     <input
                       type="time"
+                      name="openTime"
                       required
                       className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
                     />
@@ -106,6 +153,7 @@ const Step2 = () => {
                     <p className="font-semibold">Close time</p>
                     <input
                       type="time"
+                      name="closeTime"
                       required
                       className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
                     />
@@ -121,85 +169,35 @@ const Step2 = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap justify-start px-5">
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Monday"
-                        value="Monday"
-                        className="mr-1"
-                      />
-                      Monday
-                    </label>
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Tuesday"
-                        value="Tuesday"
-                        className="mr-1"
-                      />
-                      Tuesday
-                    </label>
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Wednesday"
-                        value="Wednesday"
-                        className="mr-1"
-                      />
-                      Wednesday
-                    </label>
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Thursday"
-                        value="Thursday"
-                        className="mr-1"
-                      />
-                      Thursday
-                    </label>
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Friday"
-                        value="Friday"
-                        className="mr-1"
-                      />
-                      Friday
-                    </label>
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Saturday"
-                        value="Saturday"
-                        className="mr-1"
-                      />
-                      Saturday
-                    </label>
-                    <label className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs font-semibold">
-                      <input
-                        type="checkbox"
-                        name="Sunday"
-                        value="Sunday"
-                        className="mr-1"
-                      />
-                      Sunday
-                    </label>
+                    {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
+                      <label
+                        key={day}
+                        className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold"
+                      >
+                        <input
+                          type="checkbox"
+                          name="openDays"
+                          value={day}
+                          className="mr-1"
+                        />
+                        {day}
+                      </label>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
+
+            <div className="w-full flex justify-end px-5">
+              <button
+                type="submit"
+                className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600"
+              >
+                Continue
+              </button>
+            </div>
           </div>
         </div>
-
-        <footer className="w-full bg-white fixed bottom-0 py-5 px-4 z-20">
-          <div className="flex justify-end">
-            <input
-              type="submit"
-              value="Next"
-              className="bg-[#F22400] rounded-xl px-7 py-2 text-white font-semibold cursor-pointer"
-            />
-          </div>
-        </footer>
       </form>
     </div>
   );
