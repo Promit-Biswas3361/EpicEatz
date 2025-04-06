@@ -1,12 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Dot, Heart, Settings, MapPinHouse, PackageOpen } from "lucide-react";
+import { Heart, Settings, MapPinHouse, PackageOpen } from "lucide-react";
 
 const SidePanel = () => {
   return (
     <div className="flex flex-col pl-5 pr-0.75 py-3 sticky opacity-80 bg-gray-300">
       <NavLink
-        to="/account/orders"
+        to="/owner-account/orders"
         className={({ isActive }) =>
           [
             isActive && "bg-white",
@@ -23,7 +23,7 @@ const SidePanel = () => {
       </NavLink>
 
       <NavLink
-        to="/account/favourites"
+        to="/owner-account/details"
         className={({ isActive }) =>
           [
             isActive && "bg-white",
@@ -35,12 +35,12 @@ const SidePanel = () => {
           <div className="bg-black rounded-[50%] p-0.75 mr-4">
             <Heart color="white" size={22} />
           </div>
-          <p className="font-bold">Favourites</p>
+          <p className="font-bold">Restaurant Details</p>
         </div>
       </NavLink>
 
       <NavLink
-        to="/account/addresses"
+        to="/owner-account/menu"
         className={({ isActive }) =>
           [
             isActive && "bg-white",
@@ -52,12 +52,12 @@ const SidePanel = () => {
           <div className="bg-black rounded-[50%] p-0.75 mr-4">
             <MapPinHouse color="white" size={22} />
           </div>
-          <p className="font-bold">Addresses</p>
+          <p className="font-bold">Menu & Timings</p>
         </div>
       </NavLink>
 
       <NavLink
-        to="/account/settings"
+        to="/owner-account/settings"
         className={({ isActive }) =>
           [
             isActive && "bg-white",

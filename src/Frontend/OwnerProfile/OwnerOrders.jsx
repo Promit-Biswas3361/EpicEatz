@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IndianRupee, CircleSmall, FlaskRound } from "lucide-react";
+import { IndianRupee, CircleSmall } from "lucide-react";
 import OrderDetails from "./OrderDetails";
 
 const newOrders = [
@@ -88,7 +88,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const Orders = () => {
+const OwnerOrders = () => {
   const [orders, setOrders] = useState(newOrders);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -112,7 +112,7 @@ const Orders = () => {
 
   return (
     <div>
-      <h3 className="text-2xl font-extrabold mb-8">Past Orders</h3>
+      <h3 className="text-2xl font-extrabold mb-8">All Orders</h3>
 
       <div className="">
         {!(orders && orders.length > 0) && (
@@ -196,4 +196,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OwnerOrders;

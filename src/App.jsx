@@ -6,15 +6,20 @@ import Step1 from "./Frontend/New-partner/Step1";
 import Step2 from "./Frontend/New-partner/Step2";
 import Cart from "./Frontend/Cart";
 import Step3 from "./Frontend/New-partner/Step3";
-import Account from "./Frontend/Profile/Account";
-import Orders from "./Frontend/Profile/Orders";
-import Favourites from "./Frontend/Profile/Favourites";
-import Settings from "./Frontend/Profile/Settings";
-import Address from "./Frontend/Profile/Address";
+import Account from "./Frontend/UserProfile/Account";
+import Orders from "./Frontend/UserProfile/Orders";
+import Favourites from "./Frontend/UserProfile/Favourites";
+import Settings from "./Frontend/UserProfile/Settings";
+import Address from "./Frontend/UserProfile/Address";
 import Checkout from "./Frontend/Checkout";
 import OrderConfirmation from "./Frontend/OrderConfirmation";
 import AboutUs from "./Frontend/AboutUs";
 import Contact from "./Frontend/Contact";
+import OwnerAccount from "./Frontend/OwnerProfile/OwnerAccount";
+import OwnerOrders from "./Frontend/OwnerProfile/OwnerOrders";
+import OwnerSettings from "./Frontend/OwnerProfile/OwnerSettings";
+import MenuTimings from "./Frontend/OwnerProfile/MenuTimings";
+import RestaurantDetails from "./Frontend/OwnerProfile/RestaurantDetails";
 
 function App() {
   return (
@@ -38,6 +43,14 @@ function App() {
           <Route path="favourites" element={<Favourites />} />
           <Route path="settings" element={<Settings />} />
           <Route path="addresses" element={<Address />} />
+          <Route index element={<Orders />} />
+        </Route>
+
+        <Route path="/owner-account" element={<OwnerAccount />}>
+          <Route path="orders" element={<OwnerOrders />} />
+          <Route path="menu" element={<MenuTimings />} />
+          <Route path="settings" element={<OwnerSettings />} />
+          <Route path="details" element={<RestaurantDetails />} />
           <Route index element={<Orders />} />
         </Route>
       </Routes>
