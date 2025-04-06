@@ -20,9 +20,9 @@ const OwnerAccount = () => {
             <p className="text-lg font-light">Email</p>
           </div>
         </div>
-        <div className="bg-white sm:flex max-sm:pb-5 pt-8 px-8">
+        <div className="bg-white md:flex max-md:pb-5 pt-8 px-8">
           <SidePanel />
-          <div className="max-sm:mt-10 sm:ml-8 sm:flex-grow">
+          <div className="max-md:mt-10 md:ml-8 md:flex-grow">
             <Outlet />
           </div>
         </div>

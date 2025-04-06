@@ -1,6 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Heart, Settings, MapPinHouse, PackageOpen } from "lucide-react";
+import {
+  Settings,
+  PackageOpen,
+  ConciergeBell,
+  ClipboardList,
+} from "lucide-react";
 
 const SidePanel = () => {
   return (
@@ -33,7 +38,7 @@ const SidePanel = () => {
       >
         <div className="flex items-center">
           <div className="bg-black rounded-[50%] p-0.75 mr-4">
-            <Heart color="white" size={22} />
+            <ConciergeBell color="white" size={22} />
           </div>
           <p className="font-bold">Restaurant Details</p>
         </div>
@@ -50,7 +55,7 @@ const SidePanel = () => {
       >
         <div className="flex items-center">
           <div className="bg-black rounded-[50%] p-0.75 mr-4">
-            <MapPinHouse color="white" size={22} />
+            <ClipboardList color="white" size={22} />
           </div>
           <p className="font-bold">Menu & Timings</p>
         </div>
