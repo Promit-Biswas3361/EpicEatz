@@ -1,50 +1,77 @@
 const express = require("express");
-const Restaurant = require("../models/Restaurant"); // Import the Restaurant model
+const auth = require("../middleware/auth");
+const multer = require("multer");
+const RestaurantDocuments = require("../models/RestaurantDocuments");
 
 const router = express.Router();
 
-// 🟢 GET all restaurants
-router.get("/", async (req, res) => {
-    try {
-        const restaurants = await Restaurant.find().populate("menu"); // Fetch restaurants with food items
-        res.json(restaurants);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/documents");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`);
+  },
 });
 
-// 🔵 GET a single restaurant by ID
-router.get("/:id", async (req, res) => {
-    try {
-        const restaurant = await Restaurant.findById(req.params.id).populate("menu");
-        if (!restaurant) return res.status(404).json({ message: "Restaurant not found" });
-        res.json(restaurant);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+const upload = multer({ storage });
+
+// ✅ Route to check if logged-in user has already added restaurant documents
+router.get("/me", auth, async (req, res) => {
+  try {
+    const existingDocs = await RestaurantDocuments.findOne({
+      restaurantId: req.user.userId,
+    });
+
+    if (!existingDocs) {
+      return res.status(404).json({ exists: false, message: "No restaurant found" });
     }
+
+    res.status(200).json({ exists: true, restaurant: existingDocs });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 });
 
-// 🟠 POST - Add a new restaurant
-router.post("/", async (req, res) => {
-    const { name, rating, menu } = req.body;
-    const newRestaurant = new Restaurant({ name, rating, menu });
-
+// 📤 Route to upload restaurant documents
+router.post(
+  "/upload-documents",
+  auth,
+  upload.fields([
+    { name: "fssai", maxCount: 1 },
+    { name: "gst", maxCount: 1 },
+    { name: "shopAct", maxCount: 1 },
+    { name: "bankProof", maxCount: 1 },
+  ]),
+  async (req, res) => {
     try {
-        const savedRestaurant = await newRestaurant.save();
-        res.status(201).json(savedRestaurant);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
+      const documentPaths = {
+        restaurantId: req.user.userId,
+        fssai: req.files.fssai?.[0]?.path || "",
+        gst: req.files.gst?.[0]?.path || "",
+        shopAct: req.files.shopAct?.[0]?.path || "",
+        bankProof: req.files.bankProof?.[0]?.path || "",
+        pan: req.body.pan,
+        ifsc: req.body.ifsc,
+        accountNumber: req.body.accountNumber,
+        password: req.body.password,
+      };
 
-// 🔴 DELETE a restaurant
-router.delete("/:id", async (req, res) => {
-    try {
-        await Restaurant.findByIdAndDelete(req.params.id);
-        res.json({ message: "Restaurant deleted" });
+      const updatedDoc = await RestaurantDocuments.findOneAndUpdate(
+        { restaurantId: req.user.userId },
+        documentPaths,
+        { upsert: true, new: true }
+      );
+
+      res
+        .status(201)
+        .json({ message: "Documents uploaded successfully", updatedDoc });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+      res
+        .status(500)
+        .json({ message: "Failed to upload", error: err.message });
     }
-});
+  }
+);
 
 module.exports = router;
