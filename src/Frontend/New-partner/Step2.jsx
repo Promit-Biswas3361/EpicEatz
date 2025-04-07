@@ -8,6 +8,14 @@ const Step2 = () => {
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
 
+  const convertToAMPM = (timeStr) => {
+    const [hour, minute] = timeStr.split(":");
+    const h = parseInt(hour);
+    const suffix = h >= 12 ? "PM" : "AM";
+    const hour12 = ((h + 11) % 12) + 1; // Convert 24hr to 12hr format
+    return `${hour12}:${minute} ${suffix}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -18,8 +26,17 @@ const Step2 = () => {
     for (let i = 0; i < count; i++) {
       const nameInput = form[`itemName${i}`];
       const fileInput = form[`itemImage${i}`];
-      if (nameInput?.value) {
-        formData.append("menuItems[]", JSON.stringify({ name: nameInput.value }));
+      const priceInput = form[`itemPrice${i}`];
+      const categoryInput = form[`itemCategory${i}`];
+      if (nameInput?.value && priceInput?.value && categoryInput?.value) {
+        formData.append(
+          "menuItems[]",
+          JSON.stringify({
+            name: nameInput.value,
+            price: priceInput.value,
+            category: categoryInput.value,
+          })
+        );
       }
       if (fileInput?.files?.[0]) {
         formData.append("images", fileInput.files[0]);
@@ -27,8 +44,8 @@ const Step2 = () => {
     }
 
     // Open and close time
-    formData.append("openTime", form.openTime.value);
-    formData.append("closeTime", form.closeTime.value);
+    formData.append("openTime", convertToAMPM(form.openTime.value));
+    formData.append("closeTime", convertToAMPM(form.closeTime.value));
 
     // Open days
     const openDays = [];
@@ -113,11 +130,28 @@ const Step2 = () => {
                       required
                       className="w-full outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                     />
+                    <div className="flex items-center w-full mt-2.5 mb-1.5">
+                      <input
+                        type="number"
+                        name={`itemPrice${index}`}
+                        required
+                        placeholder="Price*"
+                        className="w-[50%] outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm mr-1.5"
+                      />
+                      <select
+                        id="car"
+                        name={`itemCategory${index}`}
+                        className="w-[50%] outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm ml-1.5"
+                      >
+                        <option value="Veg">Veg</option>
+                        <option value="Non Veg">Non Veg</option>
+                      </select>
+                    </div>
                     <input
                       type="file"
                       name={`itemImage${index}`}
                       accept="image/*"
-                      className="w-full text-blue-400 hover:text-blue-600 cursor-pointer"
+                      className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 file:cursor-pointer mt-1.5"
                     />
                   </div>
                 ))}
@@ -141,7 +175,7 @@ const Step2 = () => {
               <div className="">
                 <div className="flex mb-4 px-5">
                   <div className="w-1/2 mr-1.5">
-                    <p className="font-semibold">Open time</p>
+                    <p className="font-semibold">Open time*</p>
                     <input
                       type="time"
                       name="openTime"
@@ -150,7 +184,7 @@ const Step2 = () => {
                     />
                   </div>
                   <div className="w-1/2 ml-1.5">
-                    <p className="font-semibold">Close time</p>
+                    <p className="font-semibold">Close time*</p>
                     <input
                       type="time"
                       name="closeTime"
@@ -169,7 +203,15 @@ const Step2 = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap justify-start px-5">
-                    {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
+                    {[
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                      "Sunday",
+                    ].map((day) => (
                       <label
                         key={day}
                         className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold"
@@ -188,10 +230,10 @@ const Step2 = () => {
               </div>
             </div>
 
-            <div className="w-full flex justify-end px-5">
+            <div className="w-full flex justify-end px-5 fixed bottom-0 left-0 bg-white py-4">
               <button
                 type="submit"
-                className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600"
+                className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 cursor-pointer"
               >
                 Continue
               </button>

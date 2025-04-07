@@ -59,12 +59,17 @@ const Step1 = () => {
     <div className="bg-gray-100">
       <NavbarPartner />
 
-      <form onSubmit={handleSubmit} className="mt-16.5 md:mt-21.5 pt-10 pb-30 w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-16.5 md:mt-21.5 pt-10 pb-30 w-full"
+      >
         <div className="flex flex-row justify-center items-start px-10 lg:px-25 xl:px-45 2xl:px-55">
           {/* Sidebar */}
           <div className="hidden md:block md:flex-[35%] mr-3.5 bg-white h-fit rounded-lg pt-3">
             <div className="border-b-1 border-gray-200 px-3 pb-4 mb-3">
-              <h4 className="text-xl font-semibold">Complete your registration</h4>
+              <h4 className="text-xl font-semibold">
+                Complete your registration
+              </h4>
             </div>
             <div className="flex items-center px-3 border-l-4 border-red-400 mb-5">
               <div className="bg-red-300 border-3 border-red-600 rounded-full p-1.5 mr-2.5">
@@ -94,7 +99,9 @@ const Step1 = () => {
             <div className="bg-white rounded-lg mb-8 py-6">
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
                 <h3 className="text-2xl font-semibold">Restaurant Name</h3>
-                <p className="text-sm text-gray-400">Customers will see this name on EpicEatz</p>
+                <p className="text-sm text-gray-400">
+                  Customers will see this name on EpicEatz
+                </p>
               </div>
               <div className="px-5">
                 <input
@@ -114,7 +121,8 @@ const Step1 = () => {
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
                 <h3 className="text-2xl font-semibold">Owner Details</h3>
                 <p className="text-sm text-gray-400">
-                  EpicEatz will use these details for all business communications and updates
+                  EpicEatz will use these details for all business
+                  communications and updates
                 </p>
               </div>
               <div className="px-6">
@@ -206,11 +214,11 @@ const Step1 = () => {
               </div>
             </div>
 
-            <div className="text-right px-6">
+            <div className="w-full flex justify-end px-5 fixed bottom-0 left-0 bg-white py-4">
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-red-500 text-white px-6 py-2.5 rounded-lg hover:bg-red-600 transition-all"
+                className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 cursor-pointer transition-all"
               >
                 {loading ? "Submitting..." : "Continue"}
               </button>

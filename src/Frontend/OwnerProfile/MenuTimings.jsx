@@ -1,5 +1,7 @@
 import { IndianRupee } from "lucide-react";
 import React, { useState } from "react";
+import veg from "../../assets/veg.png";
+import nonveg from "../../assets/nonveg.jpg";
 
 const menu1 = {
   dishes: [
@@ -9,7 +11,6 @@ const menu1 = {
       price: 250,
       category: "Veg",
       img: "https://myfoodstory.com/wp-content/uploads/2021/07/restaurant-style-paneer-butter-masala-2-500x500.jpg",
-      qty: 5,
     },
     {
       id: 2,
@@ -17,7 +18,6 @@ const menu1 = {
       price: 320,
       category: "Non Veg",
       img: "https://blendofspicesbysara.com/wp-content/uploads/2020/10/PXL_20201011_200951855.PORTRAIT-01.jpeg",
-      qty: 1,
     },
     {
       id: 3,
@@ -25,7 +25,6 @@ const menu1 = {
       price: 280,
       category: "Veg",
       img: "https://www.halfbakedharvest.com/wp-content/uploads/2021/04/One-Pot-Creamy-Penne-Alfredo-with-Spicy-Arugula-1.jpg",
-      qty: 2,
     },
     {
       id: 4,
@@ -33,7 +32,6 @@ const menu1 = {
       price: 180,
       category: "Non Veg",
       img: "https://assets.epicurious.com/photos/5c745a108918ee7ab68daf79/1:1/w_2560%2Cc_limit/Smashburger-recipe-120219.jpg",
-      qty: 1,
     },
     {
       id: 5,
@@ -41,7 +39,6 @@ const menu1 = {
       price: 450,
       category: "Non Veg",
       img: "https://aisforappleau.com/wp-content/uploads/2023/07/how-to-make-sushi-salmon-nigiri-6.jpg",
-      qty: 1,
     },
     {
       id: 6,
@@ -49,7 +46,6 @@ const menu1 = {
       price: 220,
       category: "Veg",
       img: "https://minimalistbaker.com/wp-content/uploads/2015/04/30-minute-CHICKPEA-Sweet-Potato-BUDDHA-Bowls-A-complete-meal-packed-with-protein-fiber-and-healthy-fats-with-a-STELLAR-Tahini-Lemon-Maple-Sauce-vegan-glutenfree-healthy.jpg",
-      qty: 4,
     },
     {
       id: 7,
@@ -57,7 +53,6 @@ const menu1 = {
       price: 350,
       category: "Non Veg",
       img: "https://www.hungrylankan.com/wp-content/uploads/2022/12/dosa-and-sambar-1-500x500.jpg",
-      qty: 3,
     },
     {
       id: 8,
@@ -65,7 +60,6 @@ const menu1 = {
       price: 300,
       category: "Veg",
       img: "https://safrescobaldistatic.blob.core.windows.net/media/2022/11/PIZZA-MARGHERITA.jpg",
-      qty: 3,
     },
   ],
 };
@@ -114,6 +108,7 @@ const MenuTimings = () => {
               name: editDish.name,
               price: parseFloat(editDish.price),
               img: editDish.img,
+              category: editDish.category,
             }
           : item
       ),
@@ -173,9 +168,24 @@ const MenuTimings = () => {
                     className="h-15 w-15 sm:h-20 sm:w-20 md:h-27 md:w-27 ml-4"
                   />
                 </div>
-                <p className="flex-grow flex flex-col items-center font-bold">
-                  {item.name}
-                </p>
+                <div className="flex items-center">
+                  <div className="">
+                    {item.category === "Veg" && (
+                      <img src={veg} alt="Veg" className="h-4 w-4 mr-1" />
+                    )}
+                    {item.category === "Non Veg" && (
+                      <img
+                        src={nonveg}
+                        alt="Non Veg"
+                        className="h-3.5 w-3.5 mr-1"
+                      />
+                    )}
+                  </div>
+                  <p className="flex-grow flex flex-col items-center font-bold">
+                    {item.name}
+                  </p>
+                </div>
+
                 <div className="flex items-center">
                   <IndianRupee size={14} />
                   <p className="font-semibold">{item.price}</p>
@@ -223,6 +233,18 @@ const MenuTimings = () => {
                 onChange={handleEditChange}
                 className="border-2 p-2 w-full mb-3"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold">Category: </label>
+              <select
+                name="category"
+                value={editDish.category}
+                onChange={handleEditChange}
+                className="outline-none border-2 p-2 w-full mb-3"
+              >
+                <option value="Veg">Veg</option>
+                <option value="Non Veg">Non Veg</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-semibold">Image URL:</label>
