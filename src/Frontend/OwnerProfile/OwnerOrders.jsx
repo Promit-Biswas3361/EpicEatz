@@ -124,9 +124,7 @@ const OwnerOrders = () => {
             <div key={order.id} className="border border-gray-400 p-3 mb-4">
               <div className="flex justify-between border-b-3 border-dotted border-gray-200 mb-3">
                 <div className="flex-grow">
-                  <p className="text-lg font-semibold">
-                    {order.address.label}
-                  </p>
+                  <p className="text-lg font-semibold">{order.address.label}</p>
 
                   <div className="flex text-xs text-gray-500 mb-3">
                     <p className="mr-1">Order #{order.id}</p>
@@ -176,21 +174,21 @@ const OwnerOrders = () => {
                 </div>
 
                 {isEditingOrderId === order.id && (
-                  <div className="mt-2 flex space-x-2">
+                  <div className="mt-2 flex max-sm:flex-col space-x-2">
                     <button
-                      className="bg-green-500 text-white h-12 px-3 rounded-md cursor-pointer font-semibold text-center"
+                      className="bg-green-500 max-sm:w-19 max-sm:mb-1 max-md:text-xs max-md:h-8 max-md:px-1 md:h-10 md:px-1.5 md:text-sm text-white lg:h-12 lg:px-3 rounded-md cursor-pointer font-semibold text-center"
                       onClick={() => handleStatusChange("Delivered", order.id)}
                     >
                       DELIVERED
                     </button>
                     <button
-                      className="bg-orange-500 text-white h-12 px-3 rounded-md cursor-pointer font-semibold text-center"
+                      className="bg-orange-500 max-sm:w-19 max-sm:mb-1 max-md:text-xs max-md:h-8 max-md:px-1 md:h-10 md:px-1.5 md:text-sm text-white lg:h-12 lg:px-3 rounded-md cursor-pointer font-semibold text-center"
                       onClick={() => handleStatusChange("Pending", order.id)}
                     >
                       PENDING
                     </button>
                     <button
-                      className="bg-red-500 text-white h-12 px-3 rounded-md cursor-pointer font-semibold text-center"
+                      className="bg-red-500 max-sm:w-19 max-sm:mb-1 max-md:text-xs max-md:h-8 max-md:px-1 md:h-10 md:px-1.5 md:text-sm text-white lg:h-12 lg:px-3 rounded-md cursor-pointer font-semibold text-center"
                       onClick={() => handleStatusChange("Cancelled", order.id)}
                     >
                       CANCELLED
