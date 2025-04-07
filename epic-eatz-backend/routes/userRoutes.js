@@ -4,7 +4,6 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-// ✅ Protected Route: Get User Profile
 router.get("/profile", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select("-password"); // Exclude password field

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Dot, Heart, Settings, MapPinHouse, PackageOpen } from "lucide-react";
+import { Heart, Settings, MapPinHouse, PackageOpen } from "lucide-react";
 
 const SidePanel = () => {
   return (
