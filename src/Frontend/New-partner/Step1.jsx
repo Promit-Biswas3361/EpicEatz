@@ -1,59 +1,107 @@
-import React from "react";
+import React, { useState } from "react";
 import NavbarPartner from "./NavbarPartner";
 import { ConciergeBell, ClipboardList, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Step1 = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    restaurantName: "",
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    pin: "",
+    state: "",
+  });
+
+  const handleChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    console.log("Form data being sent:", form);
+
+    try {
+      
+      const token = localStorage.getItem("token");
+      console.log("Token from localStorage:", token);
+      const response = await axios.post(
+        "http://localhost:5000/api/user/step1",
+        { ...form },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Step 1 submitted:", response.data);
+      navigate("/new-partner/step2");
+    } catch (err) {
+      console.error("Step 1 error:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="bg-gray-100">
       <NavbarPartner />
 
-      <form
-        action={() => navigate("/new-partner/step2")}
-        className="mt-16.5 md:mt-21.5 pt-10 pb-30 w-full"
-      >
+      <form onSubmit={handleSubmit} className="mt-16.5 md:mt-21.5 pt-10 pb-30 w-full">
         <div className="flex flex-row justify-center items-start px-10 lg:px-25 xl:px-45 2xl:px-55">
+          {/* Sidebar */}
           <div className="hidden md:block md:flex-[35%] mr-3.5 bg-white h-fit rounded-lg pt-3">
             <div className="border-b-1 border-gray-200 px-3 pb-4 mb-3">
-              <h4 className="text-xl font-semibold">
-                Complete your registration
-              </h4>
+              <h4 className="text-xl font-semibold">Complete your registration</h4>
             </div>
             <div className="flex items-center px-3 border-l-4 border-red-400 mb-5">
-              <div className="bg-red-300 border-3 border-red-600 rounded-[50%] p-1.5 mr-2.5">
+              <div className="bg-red-300 border-3 border-red-600 rounded-full p-1.5 mr-2.5">
                 <ConciergeBell size={35} color="yellow" />
               </div>
               <p>Restaurant information</p>
             </div>
             <div className="flex items-center px-4 mb-5">
-              <div className="bg-gray-300 border-3 border-gray-600 rounded-[50%] p-1.5 mr-2.5">
+              <div className="bg-gray-300 border-3 border-gray-600 rounded-full p-1.5 mr-2.5">
                 <ClipboardList size={35} />
               </div>
               <p>Menu and operational details</p>
             </div>
             <div className="flex items-center px-4 mb-5">
-              <div className="bg-gray-300 border-3 border-gray-600 rounded-[50%] p-1.5 mr-2.5">
+              <div className="bg-gray-300 border-3 border-gray-600 rounded-full p-1.5 mr-2.5">
                 <ShieldCheck size={35} />
               </div>
               <p>Restaurant documents</p>
             </div>
           </div>
 
+          {/* Form */}
           <div className="flex-1 md:flex-[65%] ml-3.5">
             <h1 className="text-4xl font-bold mb-8">Restaurant Information</h1>
 
+            {/* Restaurant Name */}
             <div className="bg-white rounded-lg mb-8 py-6">
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
                 <h3 className="text-2xl font-semibold">Restaurant Name</h3>
-                <p className="text-sm text-gray-400">
-                  Customers will see this name on EpicEatz
-                </p>
+                <p className="text-sm text-gray-400">Customers will see this name on EpicEatz</p>
               </div>
               <div className="px-5">
                 <input
                   type="text"
+                  name="restaurantName"
+                  value={form.restaurantName}
+                  onChange={handleChange}
                   placeholder="Restaurant name*"
                   required
                   className="w-full outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
@@ -61,24 +109,30 @@ const Step1 = () => {
               </div>
             </div>
 
+            {/* Owner Details */}
             <div className="bg-white rounded-lg mb-8 py-6">
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
                 <h3 className="text-2xl font-semibold">Owner Details</h3>
                 <p className="text-sm text-gray-400">
-                  EpicEatz will use these details for all business
-                  communications and updates
+                  EpicEatz will use these details for all business communications and updates
                 </p>
               </div>
               <div className="px-6">
                 <div className="flex mb-4">
                   <input
                     type="text"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
                     placeholder="Full name*"
                     required
                     className="w-[50%] outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mr-1.5 shadow-sm"
                   />
                   <input
                     type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
                     placeholder="Email address*"
                     required
                     className="w-[50%] outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 ml-1.5 shadow-sm"
@@ -91,6 +145,9 @@ const Step1 = () => {
                   </div>
                   <input
                     type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
                     placeholder="Phone number*"
                     required
                     className="flex-grow outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 ml-1.5 shadow-sm"
@@ -99,66 +156,67 @@ const Step1 = () => {
               </div>
             </div>
 
+            {/* Address Details */}
             <div className="bg-white rounded-lg mb-8 py-6">
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
-                <h3 className="text-2xl font-semibold">
-                  Restaurant Address Details
-                </h3>
+                <h3 className="text-2xl font-semibold">Address Details</h3>
                 <p className="text-sm text-gray-400">
-                  Address details are basis the restaurant location mentioned
-                  above
+                  We’ll verify your location to serve customers better.
                 </p>
               </div>
-              <div className="px-5">
+              <div className="px-6">
                 <input
                   type="text"
-                  placeholder="Restaurant address*"
+                  name="address"
+                  value={form.address}
+                  onChange={handleChange}
+                  placeholder="Full address*"
                   required
-                  className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
+                  className="w-full mb-4 outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                 />
                 <div className="flex mb-4">
                   <input
                     type="text"
+                    name="city"
+                    value={form.city}
+                    onChange={handleChange}
                     placeholder="City*"
                     required
-                    className="w-[50%] shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mr-1.5"
+                    className="w-1/2 mr-2 outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                   />
                   <input
                     type="text"
-                    placeholder="PIN code*"
-                    required
-                    pattern="[0-9]{6}"
-                    className="w-[50%] shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 ml-1.5"
-                  />
-                </div>
-                <div className="flex">
-                  <input
-                    type="text"
+                    name="state"
+                    value={form.state}
+                    onChange={handleChange}
                     placeholder="State*"
                     required
-                    className="w-[50%] outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mr-1.5 shadow-sm"
-                  />
-                  <input
-                    type="text"
-                    value="India"
-                    readOnly
-                    className="w-[50%] outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 ml-1.5 shadow-sm"
+                    className="w-1/2 ml-2 outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                   />
                 </div>
+                <input
+                  type="text"
+                  name="pin"
+                  value={form.pin}
+                  onChange={handleChange}
+                  placeholder="Pincode*"
+                  required
+                  className="w-full outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
+                />
               </div>
+            </div>
+
+            <div className="text-right px-6">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-red-500 text-white px-6 py-2.5 rounded-lg hover:bg-red-600 transition-all"
+              >
+                {loading ? "Submitting..." : "Continue"}
+              </button>
             </div>
           </div>
         </div>
-
-        <footer className="w-full bg-white fixed bottom-0 py-5 px-4 z-20">
-          <div className="flex justify-end">
-            <input
-              type="submit"
-              value="Next"
-              className="bg-[#F22400] rounded-xl px-7 py-2 text-white font-semibold cursor-pointer"
-            />
-          </div>
-        </footer>
       </form>
     </div>
   );
