@@ -62,17 +62,14 @@ const NavbarLanding = () => {
   return (
     <div className="relative bg-[url(/bg.jpeg)] w-full h-110 bg-cover bg-left bg-no-repeat">
       <div className="pt-3 pb-10 flex flex-row justify-end items-center mr-2">
-        {(!isAuthenticated || (isAuthenticated && !restaurantExists)) && (
-          <NavLink
+        {!isAuthenticated ? (
+          <>
+            <NavLink
             to="/new-partner/get-started"
             className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
           >
             Add Restaurant
           </NavLink>
-        )}
-
-        {!isAuthenticated ? (
-          <>
             <NavLink
               className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
               onClick={openLogin}

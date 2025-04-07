@@ -168,7 +168,7 @@ const MenuTimings = () => {
                     className="h-15 w-15 sm:h-20 sm:w-20 md:h-27 md:w-27 ml-4"
                   />
                 </div>
-                <div className="flex items-center">
+                <div className="flex-grow flex max-sm:flex-col items-center justify-center">
                   <div className="">
                     {item.category === "Veg" && (
                       <img src={veg} alt="Veg" className="h-4 w-4 mr-1" />
@@ -181,7 +181,7 @@ const MenuTimings = () => {
                       />
                     )}
                   </div>
-                  <p className="flex-grow flex flex-col items-center font-bold">
+                  <p className="font-bold text-center">
                     {item.name}
                   </p>
                 </div>
@@ -211,7 +211,7 @@ const MenuTimings = () => {
       </div>
 
       {editDish && (
-        <div className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center">
+        <div className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center mt-7">
           <div className="bg-white p-6 rounded-md w-[90%] sm:w-[400px] shadow-xl">
             <h3 className="text-2xl font-bold mb-4">Edit Dish</h3>
             <div>
