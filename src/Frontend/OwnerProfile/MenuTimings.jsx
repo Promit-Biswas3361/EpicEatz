@@ -87,12 +87,38 @@ const timings1 = {
 const MenuTimings = () => {
   const [timings, setTimings] = useState(timings1);
   const [menu, setMenu] = useState(menu1);
+  const [editDish, setEditDish] = useState(null);
 
   const removeDish = (id) => {
     setMenu((prevMenu) => ({
       ...prevMenu,
       dishes: prevMenu.dishes.filter((item) => item.id !== id),
     }));
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditDish((prevEdit) => ({
+      ...prevEdit,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = () => {
+    setMenu((prevMenu) => ({
+      ...prevMenu,
+      dishes: prevMenu.dishes.map((item) =>
+        item.id === editDish.id
+          ? {
+              ...item,
+              name: editDish.name,
+              price: parseFloat(editDish.price),
+              img: editDish.img,
+            }
+          : item
+      ),
+    }));
+    setEditDish(null);
   };
 
   return (
@@ -162,7 +188,10 @@ const MenuTimings = () => {
                 >
                   REMOVE
                 </button>
-                <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold w-[82px] py-0.5 cursor-pointer rounded-md mx-2">
+                <button
+                  className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold w-[82px] py-0.5 cursor-pointer rounded-md mx-2"
+                  onClick={() => setEditDish(item)}
+                >
                   EDIT
                 </button>
               </div>
@@ -170,6 +199,58 @@ const MenuTimings = () => {
           ))}
         </div>
       </div>
+
+      {editDish && (
+        <div className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-md w-[90%] sm:w-[400px] shadow-xl">
+            <h3 className="text-2xl font-bold mb-4">Edit Dish</h3>
+            <div>
+              <label className="block text-sm font-semibold">Dish Name:</label>
+              <input
+                type="text"
+                name="name"
+                value={editDish.name}
+                onChange={handleEditChange}
+                className="border-2 p-2 w-full mb-3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold">Price:</label>
+              <input
+                type="number"
+                name="price"
+                value={editDish.price}
+                onChange={handleEditChange}
+                className="border-2 p-2 w-full mb-3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold">Image URL:</label>
+              <input
+                type="text"
+                name="img"
+                value={editDish.img}
+                onChange={handleEditChange}
+                className="border-2 p-2 w-full mb-3"
+              />
+            </div>
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={handleSave}
+                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-1.5 px-4 rounded-md cursor-pointer"
+              >
+                SAVE
+              </button>
+              <button
+                onClick={() => setEditDish(null)}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-1.5 px-4 rounded-md cursor-pointer"
+              >
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
