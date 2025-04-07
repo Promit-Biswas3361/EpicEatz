@@ -5,7 +5,7 @@ import OrderDetails from "./OrderDetails";
 const newOrders = [
   {
     id: 1,
-    restaurant: "Pizza Palace",
+    restaurant: "Hungry House",
     items: [
       {
         name: "Margherita Pizza",
@@ -32,7 +32,7 @@ const newOrders = [
   },
   {
     id: 2,
-    restaurant: "Sushi House",
+    restaurant: "Hungry House",
     items: [
       {
         name: "Salmon Roll",
@@ -59,7 +59,7 @@ const newOrders = [
   },
   {
     id: 3,
-    restaurant: "Coffee Corner",
+    restaurant: "Hungry House",
     items: [
       {
         name: "Cappuccino",
@@ -91,16 +91,7 @@ const formatDate = (dateString) => {
 const OwnerOrders = () => {
   const [orders, setOrders] = useState(newOrders);
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  const cancelOrder = (id) => {
-    const updatedOrders = orders.map((order) =>
-      order.id === id && order.status === "Pending"
-        ? { ...order, status: "Cancelled" }
-        : order
-    );
-
-    setOrders(updatedOrders);
-  };
+  const [isEditingOrderId, setIsEditingOrderId] = useState(false);
 
   const viewOrderDetails = (order) => {
     setSelectedOrder(order);
@@ -108,6 +99,15 @@ const OwnerOrders = () => {
 
   const closeOrderDetails = () => {
     setSelectedOrder(null);
+  };
+
+  const handleStatusChange = (newStatus, id) => {
+    const updateOrders = orders.map((order) =>
+      order.id === id ? { ...order, status: newStatus } : order
+    );
+
+    setOrders(updateOrders);
+    setIsEditingOrderId(null);
   };
 
   return (
@@ -124,7 +124,9 @@ const OwnerOrders = () => {
             <div key={order.id} className="border border-gray-400 p-3 mb-4">
               <div className="flex justify-between border-b-3 border-dotted border-gray-200 mb-3">
                 <div className="flex-grow">
-                  <p className="text-lg font-semibold">{order.restaurant}</p>
+                  <p className="text-lg font-semibold">
+                    {order.address.label}
+                  </p>
 
                   <div className="flex text-xs text-gray-500 mb-3">
                     <p className="mr-1">Order #{order.id}</p>
@@ -139,7 +141,16 @@ const OwnerOrders = () => {
                     <p>View Details</p>
                   </div>
                 </div>
-                <div className="flex items-center h-fit border-1 border-gray-200 rounded-full px-2">
+                <div
+                  className={`flex flex-shrink-0 items-center h-fit border-1 border-gray-200 rounded-full px-2 cursor-pointer hover:bg-gray-100 ${
+                    isEditingOrderId === order.id ? "hidden" : ""
+                  }`}
+                  onClick={() =>
+                    setIsEditingOrderId((prev) =>
+                      prev === order.id ? null : order.id
+                    )
+                  }
+                >
                   <CircleSmall
                     size={13}
                     color={
@@ -163,6 +174,29 @@ const OwnerOrders = () => {
                   />
                   <p className="ml-1 text-sm">{order.status}</p>
                 </div>
+
+                {isEditingOrderId === order.id && (
+                  <div className="mt-2 flex space-x-2">
+                    <button
+                      className="bg-green-500 text-white h-12 px-3 rounded-md cursor-pointer font-semibold text-center"
+                      onClick={() => handleStatusChange("Delivered", order.id)}
+                    >
+                      DELIVERED
+                    </button>
+                    <button
+                      className="bg-orange-500 text-white h-12 px-3 rounded-md cursor-pointer font-semibold text-center"
+                      onClick={() => handleStatusChange("Pending", order.id)}
+                    >
+                      PENDING
+                    </button>
+                    <button
+                      className="bg-red-500 text-white h-12 px-3 rounded-md cursor-pointer font-semibold text-center"
+                      onClick={() => handleStatusChange("Cancelled", order.id)}
+                    >
+                      CANCELLED
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="">
                 <div className="flex justify-between">
@@ -173,17 +207,6 @@ const OwnerOrders = () => {
                     <p> {order.total}</p>
                   </div>
                 </div>
-
-                {order.status === "Pending" && (
-                  <div className="text-center mt-3">
-                    <button
-                      className="bg-red-500 rounded-lg cursor-pointer px-2.5 py-1 text-white hover:bg-red-600"
-                      onClick={() => cancelOrder(order.id)}
-                    >
-                      CANCEL
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           ))}
