@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
-const restaurantSchema = new mongoose.Schema({
+const RestaurantSchema = new mongoose.Schema({
   restaurantName: String,
+  restaurantRating: mongoose.Schema.Types.Double,
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -33,4 +34,4 @@ const restaurantSchema = new mongoose.Schema({
   ifsc: String,
 });
 
-module.exports = mongoose.model("Restaurant", restaurantSchema);
+module.exports = mongoose.model("Restaurant", RestaurantSchema);

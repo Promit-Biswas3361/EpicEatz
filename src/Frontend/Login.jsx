@@ -47,9 +47,7 @@ const Login = ({ onClose, authSuccess, openSignup }) => {
         dispatch(loginSuccess({ email: email, role: data.role }));
         authSuccess();
 
-        data.role === "User"
-          ? navigate("/")
-          : navigate("/owner-account/orders");
+        navigate("/")
       } else {
         alert(data.message || "Login failed");
         dispatch(loginFailure());

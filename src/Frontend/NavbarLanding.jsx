@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, CircleUser, ShoppingCart, Heart } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import { useSelector } from "react-redux";
@@ -12,6 +12,7 @@ const NavbarLanding = () => {
   const [restaurantExists, setRestaurantExists] = useState(false);
 
   const { isAuthenticated, role } = useSelector((state) => state.login);
+  const navigate = useNavigate();
 
   const openLogin = () => {
     setLoginVisible(true);
@@ -32,6 +33,26 @@ const NavbarLanding = () => {
   const authSuccess = () => {
     setLoginVisible(false);
     setSignupVisible(false);
+  };
+
+  const searchDish = async (e) => {
+    if (e.key === "Enter") {
+      try {
+        const response = await fetch(`http://localhost:5000/api/dish/${input}`);
+        const data = await response.json();
+
+        setInput("");
+
+        if (response.ok) {
+          navigate(`/dish/${input}`, { state: { dishData: data } });
+        } else {
+          alert(data.message || "Dish not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch dish: ", error);
+        alert("Error fetching dish: ");
+      }
+    }
   };
 
   // useEffect(() => {
@@ -145,11 +166,7 @@ const NavbarLanding = () => {
             onChange={(e) => {
               setInput(e.target.value);
             }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setInput("");
-              }
-            }}
+            onKeyDown={searchDish}
           />
         </div>
       </div>
