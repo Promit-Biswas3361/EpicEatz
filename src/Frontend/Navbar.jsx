@@ -36,7 +36,7 @@ const Navbar = () => {
   return (
     <div className="flex flex-row justify-between w-full h-auto bg-red-200 items-center fixed top-0 z-50">
       <div className="">
-        <Link to="/">
+        <Link to={`${role === "User" ? "/" : "/owner-account/orders"}`}>
           <img
             src="/EpicEatz_logo.png"
             alt="EpicEatz Logo"
