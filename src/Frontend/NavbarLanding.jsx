@@ -42,12 +42,15 @@ const NavbarLanding = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-
         if (res.ok) {
           const data = await res.json();
           if (data?.name) {
             setRestaurantExists(true);
           }
+        }
+        else{
+          const data = await res.json();
+          console.log('data', data)
         }
       } catch (err) {
         setRestaurantExists(false);

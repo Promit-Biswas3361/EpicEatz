@@ -12,7 +12,7 @@ const Account = () => {
     const fetchUserData = async () => {
       let token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login"); // Redirect if not logged in
+        navigate("/"); // Redirect if not logged in
         return;
       }
 
@@ -20,7 +20,7 @@ const Account = () => {
         const response = await fetch("http://localhost:5000/api/user/profile", {
           method: "GET",
           headers: {
-            Authorization: token, // Ensure "Bearer" prefix is included
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -30,12 +30,12 @@ const Account = () => {
         } else {
           alert(data.message);
           localStorage.removeItem("token"); // Clear invalid token
-          navigate("/login");
+          navigate("/");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
         localStorage.removeItem("token"); // Remove token in case of error
-        navigate("/login");
+        navigate("/");
       }
     };
 

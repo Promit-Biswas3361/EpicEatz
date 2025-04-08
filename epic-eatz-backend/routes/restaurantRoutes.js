@@ -18,13 +18,16 @@ const upload = multer({ storage });
 
 // ✅ Route to check if logged-in user has already added restaurant documents
 router.get("/me", auth, async (req, res) => {
+  // console.log("req.user");
   try {
     const existingDocs = await RestaurantDocuments.findOne({
       restaurantId: req.user.userId,
     });
 
     if (!existingDocs) {
-      return res.status(404).json({ exists: false, message: "No restaurant found" });
+      return res
+        .status(404)
+        .json({ exists: false, message: "No restaurant found" });
     }
 
     res.status(200).json({ exists: true, restaurant: existingDocs });
@@ -67,9 +70,7 @@ router.post(
         .status(201)
         .json({ message: "Documents uploaded successfully", updatedDoc });
     } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Failed to upload", error: err.message });
+      res.status(500).json({ message: "Failed to upload", error: err.message });
     }
   }
 );
