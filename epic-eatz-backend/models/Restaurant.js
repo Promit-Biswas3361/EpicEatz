@@ -26,12 +26,15 @@ const RestaurantSchema = new mongoose.Schema({
       imageUrl: String,
     },
   ],
-  fssai: String,
-  gst: String,
-  shopAct: String,
-  bankProof: String,
-  pan: String,
-  ifsc: String,
+  documents: {
+    fssai: String,
+    gst: String,
+    shopAct: String,
+    bankProof: String,
+    pan: String,
+    ifsc: String,
+    accountNumber: String,
+  },
 });
 
 module.exports = mongoose.model("Restaurant", RestaurantSchema);
