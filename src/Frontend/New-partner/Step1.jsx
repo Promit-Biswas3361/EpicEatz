@@ -12,18 +12,35 @@ const Step1 = () => {
     fullName: "",
     email: "",
     phone: "",
-    address: "",
+    address: {
+      street: "",
+      city: "",
+      state: "",
+      pin: ""
+    },
     city: "",
     pin: "",
     state: "",
   });
 
   const handleChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    if (name in form.address) {
+      setForm((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [name]: value
+        }
+      }));
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -150,7 +167,7 @@ const Step1 = () => {
               </div>
             </div>
 
-            {/* Address Details */}
+           {/* Address Details */}
             <div className="bg-white rounded-lg mb-8 py-6">
               <div className="border-b-1 border-gray-200 mb-3 pb-6 px-5">
                 <h3 className="text-2xl font-semibold">Address Details</h3>
@@ -159,39 +176,46 @@ const Step1 = () => {
                 </p>
               </div>
               <div className="px-6">
+                {/* Street Address */}
                 <input
                   type="text"
-                  name="address"
-                  value={form.address}
+                  name="street"  // Changed from "address" to "street"
+                  value={form.address.street}  // Now using form.address.street
                   onChange={handleChange}
                   placeholder="Full address*"
                   required
                   className="w-full mb-4 outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                 />
+                
                 <div className="flex mb-4">
+                  {/* City */}
                   <input
                     type="text"
-                    name="city"
-                    value={form.city}
+                    name="city"  // Changed name to "city"
+                    value={form.address.city}  // Now using form.address.city
                     onChange={handleChange}
                     placeholder="City*"
                     required
                     className="w-1/2 mr-2 outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                   />
+                  
+                  {/* State */}
                   <input
                     type="text"
-                    name="state"
-                    value={form.state}
+                    name="state"  // Changed name to "state"
+                    value={form.address.state}  // Now using form.address.state
                     onChange={handleChange}
                     placeholder="State*"
                     required
                     className="w-1/2 ml-2 outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 shadow-sm"
                   />
                 </div>
+                
+                {/* Pincode */}
                 <input
                   type="text"
-                  name="pin"
-                  value={form.pin}
+                  name="pin"  // Changed name to "pin"
+                  value={form.address.pin}  // Now using form.address.pin
                   onChange={handleChange}
                   placeholder="Pincode*"
                   required
@@ -199,6 +223,7 @@ const Step1 = () => {
                 />
               </div>
             </div>
+
 
             <div className="w-full flex justify-end px-5 fixed bottom-0 left-0 bg-white py-4">
               <button

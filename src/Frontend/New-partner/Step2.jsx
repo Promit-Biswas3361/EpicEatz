@@ -40,7 +40,7 @@ const Step2 = () => {
     const operationalData = {
       openTime: convertToAMPM(form.openTime.value),
       closeTime: convertToAMPM(form.closeTime.value),
-      openDays,
+      openDays, // store the days as an array
       menuItems,
     };
   
@@ -158,60 +158,58 @@ const Step2 = () => {
                   Restaurant Delivery Timings
                 </h3>
               </div>
-              <div className="">
-                <div className="flex mb-4 px-5">
-                  <div className="w-1/2 mr-1.5">
-                    <p className="font-semibold">Open time*</p>
-                    <input
-                      type="time"
-                      name="openTime"
-                      required
-                      className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
-                    />
-                  </div>
-                  <div className="w-1/2 ml-1.5">
-                    <p className="font-semibold">Close time*</p>
-                    <input
-                      type="time"
-                      name="closeTime"
-                      required
-                      className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
-                    />
-                  </div>
+              <div className="flex mb-4 px-5">
+                <div className="w-1/2 mr-1.5">
+                  <p className="font-semibold">Open time*</p>
+                  <input
+                    type="time"
+                    name="openTime"
+                    required
+                    className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
+                  />
                 </div>
+                <div className="w-1/2 ml-1.5">
+                  <p className="font-semibold">Close time*</p>
+                  <input
+                    type="time"
+                    name="closeTime"
+                    required
+                    className="w-full shadow-sm outline-none border-1 border-gray-200 rounded-lg py-2.5 px-3 mb-4"
+                  />
+                </div>
+              </div>
 
-                <div className="">
-                  <div className="border-b-1 border-gray-200 px-5 pb-2 mb-3">
-                    <h3 className="font-semibold">Mark open days</h3>
-                    <p className="text-xs text-gray-400">
-                      EpicEatz will use these details for all business
-                      communications and updates
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap justify-start px-5">
-                    {[
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                      "Sunday",
-                    ].map((day) => (
-                      <label
-                        key={day}
-                        className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold"
-                      >
-                        <input
-                          type="checkbox"
-                          name="openDays"
-                          value={day}
-                          className="mr-1"
-                        />
-                        {day}
-                      </label>
-                    ))}
-                  </div>
+              <div className="">
+                <div className="border-b-1 border-gray-200 px-5 pb-2 mb-3">
+                  <h3 className="font-semibold">Mark open days</h3>
+                  <p className="text-xs text-gray-400">
+                    EpicEatz will use these details for all business
+                    communications and updates
+                  </p>
+                </div>
+                <div className="flex flex-wrap justify-start px-5">
+                  {[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                  ].map((day) => (
+                    <label
+                      key={day}
+                      className="flex shadow-sm border-1 border-gray-200 rounded-lg py-2.5 px-2 mb-4 text-xs mr-2 font-semibold"
+                    >
+                      <input
+                        type="checkbox"
+                        name="openDays"
+                        value={day}
+                        className="mr-1"
+                      />
+                      {day}
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>

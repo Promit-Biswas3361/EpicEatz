@@ -100,7 +100,9 @@ const Step3 = () => {
       fullForm.append("email", email);
       fullForm.append("name", name);
       fullForm.append("phone", phone);
-      fullForm.append("password", formData.password); // already validated
+      fullForm.append("password", formData.password);
+      fullForm.append("restaurantName", restaurantName);
+
   
       // ✅ Restaurant Info - Flatten rest of Step 1
       const step1Pairs = flattenFormData(restStep1);

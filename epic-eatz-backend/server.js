@@ -22,6 +22,7 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/restaurant", require("./routes/restaurantRoutes")); 
 app.use("/api/dish", require("./routes/searchRoutes"));
+app.use("/api/cart", require("./routes/cartRoutes")); 
 
 
 // ✅ MongoDB Connection

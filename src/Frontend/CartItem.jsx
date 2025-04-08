@@ -6,7 +6,7 @@ import { IndianRupee } from "lucide-react";
 const CartItem = ({ item, updateItemQty }) => {
   const handleQtyChange = (change) => {
     const newQty = item.item.qty + change;
-    updateItemQty(item.id, newQty);
+    updateItemQty(item._id, newQty);
   };
 
   return (
