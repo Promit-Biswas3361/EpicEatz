@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const RestaurantSchema = new mongoose.Schema({
   restaurantName: String,
-  restaurantRating: mongoose.Schema.Types.Double,
-  ownerId: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -34,6 +33,12 @@ const RestaurantSchema = new mongoose.Schema({
     pan: String,
     ifsc: String,
     accountNumber: String,
+  },
+  restaurantRating: {
+    type: Number,
+    default: 0.0,
+    min: 0,
+    max: 5,
   },
 });
 

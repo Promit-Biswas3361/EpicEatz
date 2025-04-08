@@ -32,6 +32,37 @@ const Step3 = () => {
     setFiles({ ...files, [e.target.name]: e.target.files[0] });
   };
 
+  const flattenFormData = (formData, parentKey = "") => {
+    const result = [];
+  
+    for (const key in formData) {
+      const value = formData[key];
+      const fullKey = parentKey ? `${parentKey}[${key}]` : key;
+  
+      if (Array.isArray(value)) {
+        if (typeof value[0] === "object") {
+          value.forEach((obj, index) => {
+            for (const objKey in obj) {
+              if (objKey === "image" && obj[objKey]) {
+                result.push([`menuItems[${index}][image]`, obj[objKey]]);
+              } else {
+                result.push([`menuItems[${index}][${objKey}]`, obj[objKey]]);
+              }
+            }
+          });
+        } else {
+          value.forEach((item) => result.push([`${fullKey}[]`, item]));
+        }
+      } else if (typeof value === "object" && value !== null) {
+        result.push(...flattenFormData(value, fullKey));
+      } else {
+        result.push([fullKey, value]);
+      }
+    }
+  
+    return result;
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -40,45 +71,90 @@ const Step3 = () => {
       return;
     }
   
-    const form = new FormData();
-    // Append files
-    form.append("fssai", files.fssai);
-    form.append("gst", files.gst);
-    form.append("shopAct", files.shopAct);
-    form.append("bankProof", files.bankProof);
-  
-    // Append text fields
-    form.append("pan", formData.pan);
-    form.append("ifsc", formData.ifsc);
-    form.append("accountNumber", formData.accountNumber);
-    form.append("password", formData.password);
-  
     try {
+      const step1 = JSON.parse(localStorage.getItem("restaurantStep1"));
+      const step2 = JSON.parse(localStorage.getItem("restaurantStep2"));
+  
+      if (!step1 || !step2) {
+        alert("Incomplete form data. Please complete all steps.");
+        return;
+      }
+  
+      const fullForm = new FormData();
+  
+      // Extract user fields
+      const {
+        email,
+        fullName: name,
+        restaurantName,
+        phone,
+        address,
+        city,
+        state,
+        pin,
+        ...restStep1
+      } = step1;
+      
+  
+      // ✅ Add user credentials
+      fullForm.append("email", email);
+      fullForm.append("name", name);
+      fullForm.append("phone", phone);
+      fullForm.append("password", formData.password); // already validated
+  
+      // ✅ Restaurant Info - Flatten rest of Step 1
+      const step1Pairs = flattenFormData(restStep1);
+      step1Pairs.forEach(([key, value]) => fullForm.append(key, value));
+  
+      // ✅ Address flattening
+      const addressPairs = flattenFormData(address, "address");
+      addressPairs.forEach(([key, value]) => fullForm.append(key, value));
+  
+      // ✅ Step 2 - Operational details
+      fullForm.append("openTime", step2.openTime);
+      fullForm.append("closeTime", step2.closeTime);
+      step2.openDays.forEach((day) => fullForm.append("openDays[]", day));
+  
+      const menuPairs = flattenFormData({ menuItems: step2.menuItems });
+      menuPairs.forEach(([key, value]) => fullForm.append(key, value));
+  
+      // ✅ Step 3 - Bank details + file uploads
+      fullForm.append("pan", formData.pan);
+      fullForm.append("ifsc", formData.ifsc);
+      fullForm.append("accountNumber", formData.accountNumber);
+  
+      fullForm.append("fssai", files.fssai);
+      fullForm.append("gst", files.gst);
+      fullForm.append("shopAct", files.shopAct);
+      fullForm.append("bankProof", files.bankProof);
+  
       const token = localStorage.getItem("token");
   
-      const res = await fetch("/api/restaurant/upload-documents", {
+      const res = await fetch("http://localhost:5000/api/restaurant/register-partner", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          // ❗ Don't set Content-Type when using FormData
         },
-        body: form,
+        body: fullForm,
       });
   
       const data = await res.json();
+  
       if (res.ok) {
-        alert("Documents uploaded successfully!");
+        alert("Registration successful!");
+        localStorage.removeItem("restaurantStep1");
+        localStorage.removeItem("restaurantStep2");
         navigate("/");
       } else {
-        alert(data.message || "Upload failed");
+        alert(data.message || "Registration failed");
+        console.error("Server response:", data);
       }
     } catch (err) {
-      alert("Something went wrong");
-      console.error(err);
+      console.error("Error submitting final step:", err);
+      alert("Something went wrong. Please try again.");
     }
   };
   
-
   return (
     <div className="bg-gray-100">
       <NavbarPartner />
