@@ -10,13 +10,45 @@ const OwnerSettings = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const updatePassword = (e) => {
+  const updatePassword = async (e) => {
     e.preventDefault();
-    if (password === confirmPassword) alert("Password updated!");
-    else alert("Password doesn't match. Please try again.");
 
-    setConfirmPassword("");
-    setPassword("");
+    if (password != confirmPassword) {
+      alert("Password doesn't match. Please try again.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/user/update-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ newPassword: password }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Password updated successfully!");
+        setPassword("");
+        setConfirmPassword("");
+      } else {
+        alert(data.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Error updating password: ", error);
+      alert("Server error. Please try again.");
+    }
   };
 
   const logoutUser = () => {

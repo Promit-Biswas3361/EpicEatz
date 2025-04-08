@@ -2,7 +2,8 @@ const express = require("express");
 const auth = require("../middleware/auth");
 const User = require("../models/User");
 const Orders = require("../models/Orders");
-const Address = require("../models/Address")
+const Address = require("../models/Address");
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
@@ -63,7 +64,9 @@ router.put("/orders/:orderId/cancel", auth, async (req, res) => {
     }
 
     if (order.status !== "Pending") {
-      return res.status(400).json({ message: "Only pending orders can be cancelled." });
+      return res
+        .status(400)
+        .json({ message: "Only pending orders can be cancelled." });
     }
 
     order.status = "Cancelled";
@@ -76,5 +79,19 @@ router.put("/orders/:orderId/cancel", auth, async (req, res) => {
   }
 });
 
+router.put("/update-password", auth, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { newPassword } = req.body;
+
+    const hashedPass = await bcrypt.hash(newPassword, 10);
+
+    await User.findByIdAndUpdate(userId, { password: hashedPass });
+    res.status(200).json({ message: "Password updates successfully." });
+  } catch (error) {
+    console.error("Error updating password: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 module.exports = router;
