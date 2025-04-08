@@ -40,16 +40,12 @@ const Login = ({ onClose, authSuccess, openSignup }) => {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-        dispatch(loginSuccess({ email }));
-
-        if (typeof authSuccess === "function") {
-          authSuccess();
-        } else {
-          console.warn("authSuccess is not a function");
-        }
+        dispatch(loginSuccess({ email: email, role: data.role }));
+        authSuccess();
 
         navigate("/");
       } else {
