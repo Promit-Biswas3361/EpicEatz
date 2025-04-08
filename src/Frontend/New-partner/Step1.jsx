@@ -28,32 +28,18 @@ const Step1 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    console.log("Form data being sent:", form);
-
+  
     try {
-      
-      const token = localStorage.getItem("token");
-      console.log("Token from localStorage:", token);
-      const response = await axios.post(
-        "http://localhost:5000/api/user/step1",
-        { ...form },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log("Step 1 submitted:", response.data);
+      localStorage.setItem("restaurantStep1", JSON.stringify(form));
       navigate("/new-partner/step2");
     } catch (err) {
-      console.error("Step 1 error:", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Something went wrong. Please try again.");
+      console.error("Error saving step1 to localStorage:", err);
+      alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="bg-gray-100">

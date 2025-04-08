@@ -18,55 +18,41 @@ const Step2 = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const form = e.target;
-    const formData = new FormData();
-
-    // Menu items (name and image)
+    const menuItems = [];
+  
     for (let i = 0; i < count; i++) {
-      const nameInput = form[`itemName${i}`];
-      const fileInput = form[`itemImage${i}`];
-      const priceInput = form[`itemPrice${i}`];
-      const categoryInput = form[`itemCategory${i}`];
-      if (nameInput?.value && priceInput?.value && categoryInput?.value) {
-        formData.append(
-          "menuItems[]",
-          JSON.stringify({
-            name: nameInput.value,
-            price: priceInput.value,
-            category: categoryInput.value,
-          })
-        );
-      }
-      if (fileInput?.files?.[0]) {
-        formData.append("images", fileInput.files[0]);
+      const name = form[`itemName${i}`]?.value;
+      const price = form[`itemPrice${i}`]?.value;
+      const category = form[`itemCategory${i}`]?.value;
+      const image = form[`itemImage${i}`]?.files?.[0];
+  
+      if (name && price && category) {
+        menuItems.push({ name, price, category, image });
       }
     }
-
-    // Open and close time
-    formData.append("openTime", convertToAMPM(form.openTime.value));
-    formData.append("closeTime", convertToAMPM(form.closeTime.value));
-
-    // Open days
-    const openDays = [];
-    for (const input of form.openDays) {
-      if (input.checked) openDays.push(input.value);
-    }
-    formData.append("openDays", JSON.stringify(openDays));
-
+  
+    const openDays = Array.from(form.openDays)
+      .filter((day) => day.checked)
+      .map((day) => day.value);
+  
+    const operationalData = {
+      openTime: convertToAMPM(form.openTime.value),
+      closeTime: convertToAMPM(form.closeTime.value),
+      openDays,
+      menuItems,
+    };
+  
     try {
-      await axios.post("http://localhost:5000/api/user/step2", formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      localStorage.setItem("restaurantStep2", JSON.stringify(operationalData));
       navigate("/new-partner/step3");
     } catch (err) {
-      console.error("Submission error:", err);
+      console.error("Error saving step2 to localStorage:", err);
+      alert("Something went wrong. Please try again.");
     }
   };
+  
 
   return (
     <div className="bg-gray-100">

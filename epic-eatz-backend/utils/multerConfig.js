@@ -2,9 +2,19 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+// Dynamic storage config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const folder = "./uploads/menuImages";
+    let folder = "./uploads/others";
+
+    if (file.fieldname === "images") {
+      folder = "./uploads/menuImages";
+    } else if (
+      ["fssai", "gst", "shopAct", "bankProof"].includes(file.fieldname)
+    ) {
+      folder = "./uploads/documents";
+    }
+
     fs.mkdirSync(folder, { recursive: true });
     cb(null, folder);
   },
