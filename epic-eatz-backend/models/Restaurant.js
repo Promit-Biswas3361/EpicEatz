@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
-const restaurantSchema = new mongoose.Schema({
+const RestaurantSchema = new mongoose.Schema({
   restaurantName: String,
+  restaurantRating: mongoose.Schema.Types.Double,
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -25,12 +26,15 @@ const restaurantSchema = new mongoose.Schema({
       imageUrl: String,
     },
   ],
-  fssai: String,
-  gst: String,
-  shopAct: String,
-  bankProof: String,
-  pan: String,
-  ifsc: String,
+  documents: {
+    fssai: String,
+    gst: String,
+    shopAct: String,
+    bankProof: String,
+    pan: String,
+    ifsc: String,
+    accountNumber: String,
+  },
 });
 
-module.exports = mongoose.model("Restaurant", restaurantSchema);
+module.exports = mongoose.model("Restaurant", RestaurantSchema);

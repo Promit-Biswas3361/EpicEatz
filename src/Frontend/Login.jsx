@@ -47,7 +47,7 @@ const Login = ({ onClose, authSuccess, openSignup }) => {
         dispatch(loginSuccess({ email: email, role: data.role }));
         authSuccess();
 
-        navigate("/");
+        navigate("/")
       } else {
         alert(data.message || "Login failed");
         dispatch(loginFailure());

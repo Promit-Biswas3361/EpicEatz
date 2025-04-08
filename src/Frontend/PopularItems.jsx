@@ -4,10 +4,28 @@ import { useNavigate } from "react-router-dom";
 const PopularItems = ({ name, url }) => {
   const navigate = useNavigate();
 
+  const handleClick = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/dish/${name}`);
+      const data = await response.json();
+
+      console.log(data);
+
+      if (response.ok) {
+        navigate(`/dish/${name}`, { state: { dishData: data } });
+      } else {
+        alert(data.message || "Dish not found");
+      }
+    } catch (error) {
+      console.error("Failed to fetch dish: ", error);
+      alert("Error fetching dish: ");
+    }
+  };
+
   return (
     <div
       className="cursor-pointer text-center w-max-45 h-auto mx-3 md:mx-5 lg:mx-7 mb-10"
-      onClick={() => navigate(`/dish/${name}`)}
+      onClick={handleClick}
     >
       <img
         src={url}
