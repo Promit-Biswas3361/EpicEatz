@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, CircleUser, ShoppingCart, Heart } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import { useSelector } from "react-redux";
@@ -11,7 +11,8 @@ const NavbarLanding = () => {
   const [signupVisible, setSignupVisible] = useState(false);
   const [restaurantExists, setRestaurantExists] = useState(false);
 
-  const { isAuthenticated } = useSelector((state) => state.login);
+  const { isAuthenticated, role } = useSelector((state) => state.login);
+  const navigate = useNavigate();
 
   const openLogin = () => {
     setLoginVisible(true);
@@ -34,33 +35,53 @@ const NavbarLanding = () => {
     setSignupVisible(false);
   };
 
-  useEffect(() => {
-    const fetchRestaurant = async () => {
+  const searchDish = async (e) => {
+    if (e.key === "Enter") {
       try {
-        const res = await fetch("http://localhost:5000/api/restaurant/me", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data?.name) {
-            setRestaurantExists(true);
-          }
-        }
-        else{
-          const data = await res.json();
-          console.log('data', data)
-        }
-      } catch (err) {
-        setRestaurantExists(false);
-      }
-    };
+        const response = await fetch(`http://localhost:5000/api/dish/${input}`);
+        const data = await response.json();
 
-    if (isAuthenticated) {
-      fetchRestaurant();
+        setInput("");
+
+        if (response.ok) {
+          navigate(`/dish/${input}`, { state: { dishData: data } });
+        } else {
+          alert(data.message || "Dish not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch dish: ", error);
+        alert("Error fetching dish: ");
+      }
     }
-  }, [isAuthenticated]);
+  };
+
+  // useEffect(() => {
+  //   const fetchRestaurant = async () => {
+  //     try {
+  //       const res = await fetch("http://localhost:5000/api/restaurant/me", {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       });
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         if (data?.name) {
+  //           setRestaurantExists(true);
+  //         }
+  //       }
+  //       else{
+  //         const data = await res.json();
+  //         console.log('data', data)
+  //       }
+  //     } catch (err) {
+  //       setRestaurantExists(false);
+  //     }
+  //   };
+
+  //   if (isAuthenticated) {
+  //     fetchRestaurant();
+  //   }
+  // }, [isAuthenticated]);
 
   return (
     <div className="relative bg-[url(/bg.jpeg)] w-full h-110 bg-cover bg-left bg-no-repeat">
@@ -68,11 +89,11 @@ const NavbarLanding = () => {
         {!isAuthenticated ? (
           <>
             <NavLink
-            to="/new-partner/get-started"
-            className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
-          >
-            Add Restaurant
-          </NavLink>
+              to="/new-partner/get-started"
+              className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
+            >
+              Add Restaurant
+            </NavLink>
             <NavLink
               className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
               onClick={openLogin}
@@ -86,7 +107,7 @@ const NavbarLanding = () => {
               SignUp
             </NavLink>
           </>
-        ) : (
+        ) : role === "User" ? (
           <>
             <NavLink to="/account/favourites" className="mx-3">
               <Heart
@@ -101,6 +122,15 @@ const NavbarLanding = () => {
               />
             </NavLink>
             <NavLink to="/account/orders" className="mx-3">
+              <CircleUser
+                color="white"
+                className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+              />
+            </NavLink>
+          </>
+        ) : (
+          <>
+            <NavLink to="/owner-account/orders" className="mx-3">
               <CircleUser
                 color="white"
                 className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
@@ -136,11 +166,7 @@ const NavbarLanding = () => {
             onChange={(e) => {
               setInput(e.target.value);
             }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setInput("");
-              }
-            }}
+            onKeyDown={searchDish}
           />
         </div>
       </div>

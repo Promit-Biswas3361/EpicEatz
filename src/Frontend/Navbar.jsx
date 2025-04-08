@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Search, CircleUser, ShoppingCart, Heart } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import { useSelector } from "react-redux";
@@ -10,7 +10,8 @@ const Navbar = () => {
   const [loginVisible, setLoginVisible] = useState(false);
   const [signupVisible, setSignupVisible] = useState(false);
 
-  const { isAuthenticated, user, error } = useSelector((state) => state.login);
+  const { isAuthenticated, role } = useSelector((state) => state.login);
+  const navigate = useNavigate();
 
   const openLogin = () => {
     setLoginVisible(true);
@@ -33,10 +34,30 @@ const Navbar = () => {
     setSignupVisible(false);
   };
 
+  const searchDish = async (e) => {
+    if (e.key === "Enter") {
+      try {
+        const response = await fetch(`http://localhost:5000/api/dish/${input}`);
+        const data = await response.json();
+
+        setInput("");
+
+        if (response.ok) {
+          navigate(`/dish/${input}`, { state: { dishData: data } });
+        } else {
+          alert(data.message || "Dish not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch dish: ", error);
+        alert("Error fetching dish: ");
+      }
+    }
+  };
+
   return (
     <div className="flex flex-row justify-between w-full h-auto bg-red-200 items-center fixed top-0 z-50">
       <div className="">
-        <Link to="/">
+        <Link to="/" >
           <img
             src="/EpicEatz_logo.png"
             alt="EpicEatz Logo"
@@ -59,48 +80,53 @@ const Navbar = () => {
           onChange={(e) => {
             setInput(e.target.value);
           }}
-          onKeyDown={(e) => {
-            if (e.key == "Enter") {
-              setInput("");
-            }
-          }}
+          onKeyDown={searchDish}
         />
       </div>
 
-      {isAuthenticated ? (
-        <div className="mr-2 flex flex-row justify-end items-center">
-          <NavLink to="/account/favourites" className="mx-3">
-            <Heart
-              color="white"
-              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
-            />
-          </NavLink>
-          <NavLink to="/cart" className="mx-3">
-            <ShoppingCart
-              color="white"
-              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
-            />
-          </NavLink>
-          <NavLink to="/account/orders" className="mx-3">
-            <CircleUser
-              color="white"
-              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
-            />
-          </NavLink>
-        </div>
-      ) : (
-        <div className="flex flex-row justify-end">
+      {!isAuthenticated ? (
+        <div className="flex items-center justify-center">
           <NavLink
-            className="text-red-600 md:text-lg bg-white p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-gray-200"
+            className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
             onClick={openLogin}
           >
             Login
           </NavLink>
           <NavLink
-            className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-red-500"
+            className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-full mx-2 hover:bg-red-500"
             onClick={openSignup}
           >
             SignUp
+          </NavLink>
+        </div>
+      ) : role === "User" ? (
+        <div className="flex items-center justify-center">
+          <NavLink to="/account/favourites" className="mx-3">
+            <Heart
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
+          </NavLink>
+          <NavLink to="/cart" className="mx-3">
+            <ShoppingCart
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
+          </NavLink>
+          <NavLink to="/account/orders" className="mx-3">
+            <CircleUser
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
+          </NavLink>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center">
+          <NavLink to="/owner-account/orders" className="mx-3">
+            <CircleUser
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
           </NavLink>
         </div>
       )}

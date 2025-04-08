@@ -21,6 +21,7 @@ app.use("/uploads", express.static("uploads")); // serve uploaded files
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/restaurant", require("./routes/restaurantRoutes")); 
+app.use("/api/dish", require("./routes/searchRoutes"));
 
 
 // ✅ MongoDB Connection

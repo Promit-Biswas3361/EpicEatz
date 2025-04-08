@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const restaurantSchema = new mongoose.Schema({
+const RestaurantSchema = new mongoose.Schema({
   restaurantName: String,
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,4 +42,4 @@ const restaurantSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Restaurant", restaurantSchema);
+module.exports = mongoose.model("Restaurant", RestaurantSchema);
