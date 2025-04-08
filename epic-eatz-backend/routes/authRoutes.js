@@ -1,8 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");  // ✅ Missing import added
+const jwt = require("jsonwebtoken"); // ✅ Missing import added
 const User = require("../models/User");
-require("dotenv").config();  // ✅ Ensure env variables are loaded
+require("dotenv").config(); // ✅ Ensure env variables are loaded
 
 const router = express.Router();
 
@@ -27,15 +27,17 @@ router.post("/login", async (req, res) => {
 
     // Generate JWT Token
     if (!process.env.JWT_SECRET) {
-      console.error("❌ JWT_SECRET is missing in .env file!");
-      return res.status(500).json({ message: "Server error: JWT Secret is missing" });
+      console.error("JWT_SECRET is missing in .env file!");
+      return res
+        .status(500)
+        .json({ message: "Server error: JWT Secret is missing" });
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "365d",
     });
 
-    res.json({ message: "Login successful", token });
+    res.json({ message: "Login successful", token, role: user.role });
   } catch (error) {
     console.error("Error in Login Route:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -45,7 +47,7 @@ router.post("/login", async (req, res) => {
 // Signup Route
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, role } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -62,6 +64,7 @@ router.post("/signup", async (req, res) => {
       email,
       phone,
       password: hashedPassword,
+      role,
     });
 
     await newUser.save();

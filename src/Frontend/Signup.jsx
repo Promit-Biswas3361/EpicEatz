@@ -19,10 +19,10 @@ function Signup({ onClose, openLogin }) {
   }, []);
 
   useEffect(() => {
-      if (passwordRef.current) {
-        passwordRef.current.type = showPassword ? "text" : "password";
-      }
-    }, [showPassword]);
+    if (passwordRef.current) {
+      passwordRef.current.type = showPassword ? "text" : "password";
+    }
+  }, [showPassword]);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -30,7 +30,7 @@ function Signup({ onClose, openLogin }) {
       const response = await fetch("http://localhost:5000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, password }),
+        body: JSON.stringify({ name, email, phone, password, role: "User" }),
       });
 
       const data = await response.json();

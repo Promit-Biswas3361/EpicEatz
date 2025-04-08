@@ -10,7 +10,7 @@ const Navbar = () => {
   const [loginVisible, setLoginVisible] = useState(false);
   const [signupVisible, setSignupVisible] = useState(false);
 
-  const { isAuthenticated, user, error } = useSelector((state) => state.login);
+  const { isAuthenticated, role } = useSelector((state) => state.login);
 
   const openLogin = () => {
     setLoginVisible(true);
@@ -67,40 +67,49 @@ const Navbar = () => {
         />
       </div>
 
-      {isAuthenticated ? (
-        <div className="mr-2 flex flex-row justify-end items-center">
-          <NavLink to="/account/favourites" className="mx-3">
-            <Heart
-              color="white"
-              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
-            />
-          </NavLink>
-          <NavLink to="/cart" className="mx-3">
-            <ShoppingCart
-              color="white"
-              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
-            />
-          </NavLink>
-          <NavLink to="/account/orders" className="mx-3">
-            <CircleUser
-              color="white"
-              className="hover:fill-red-500 h-8 w-8 lg:h-10 lg:w-10"
-            />
-          </NavLink>
-        </div>
-      ) : (
-        <div className="flex flex-row justify-end">
+      {!isAuthenticated ? (
+        <div className="flex items-center justify-center">
           <NavLink
-            className="text-red-600 md:text-lg bg-white p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-gray-200"
+            className="text-red-600 md:text-lg bg-white p-2.5 rounded-full mx-2 hover:bg-gray-200"
             onClick={openLogin}
           >
             Login
           </NavLink>
           <NavLink
-            className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-r-full rounded-l-full mx-2 hover:bg-red-500"
+            className="text-white md:text-lg bg-[#f75c5c] p-2.5 rounded-full mx-2 hover:bg-red-500"
             onClick={openSignup}
           >
             SignUp
+          </NavLink>
+        </div>
+      ) : role === "User" ? (
+        <div className="flex items-center justify-center">
+          <NavLink to="/account/favourites" className="mx-3">
+            <Heart
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
+          </NavLink>
+          <NavLink to="/cart" className="mx-3">
+            <ShoppingCart
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
+          </NavLink>
+          <NavLink to="/account/orders" className="mx-3">
+            <CircleUser
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
+          </NavLink>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center">
+          <NavLink to="/owner-account/orders" className="mx-3">
+            <CircleUser
+              color="white"
+              className="hover:fill-red-500  h-8 w-8 lg:h-10 lg:w-10"
+            />
           </NavLink>
         </div>
       )}
