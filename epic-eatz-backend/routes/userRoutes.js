@@ -27,6 +27,7 @@ router.get("/orders", auth, async (req, res) => {
     const orders = await Orders.find({ userId })
       .populate("restaurantId", "restaurantName")
       .populate("addressId", "label address")
+      .sort({ createdAt: -1 })
       .lean();
 
     const formattedOrders = orders.map((order) => ({
