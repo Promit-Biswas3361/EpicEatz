@@ -94,4 +94,79 @@ router.put("/update-password", auth, async (req, res) => {
   }
 });
 
+// Get all addresses for logged-in user
+router.get("/addresses", auth, async (req, res) => {
+  try {
+    const addresses = await Address.find({ userId: req.user.userId });
+    res.status(200).json({ addresses });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch addresses" });
+  }
+});
+
+// Add new address
+router.post("/add-address", auth, async (req, res) => {
+  try {
+    const { label, type, address, phone } = req.body;
+
+    const newAddress = new Address({
+      userId: req.user.userId,
+      label,
+      type,
+      address,
+      phone,
+    });
+
+    await newAddress.save();
+    res.status(201).json({ address: newAddress });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to add address" });
+  }
+});
+
+// Update address
+router.put("/address/update/:id", auth, async (req, res) => {
+  try {
+    const addressId = req.params.id;
+
+    const updated = await Address.findOneAndUpdate(
+      { _id: addressId, userId: req.user.userId },
+      req.body,
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    res.status(200).json({ address: updated });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update address" });
+  }
+});
+
+// Delete address
+router.delete("/address/delete/:id", auth, async (req, res) => {
+  try {
+    const addressId = req.params.id;
+
+    const deleted = await Address.findOneAndDelete({
+      _id: addressId,
+      userId: req.user.userId,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    res.status(200).json({ message: "Address deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete address" });
+  }
+});
+
 module.exports = router;
