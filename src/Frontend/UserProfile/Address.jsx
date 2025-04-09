@@ -7,6 +7,7 @@ const Address = () => {
   const [addresses, setAddresses] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const Address = () => {
     };
 
     fetchAddresses();
-  }, [addresses]);
+  }, [refresh]);
 
   const deleteAddress = async (id) => {
     const token = localStorage.getItem("token");
@@ -63,6 +64,7 @@ const Address = () => {
       const data = await response.json();
       if (response.ok) {
         setAddresses(addresses.filter((item) => item.id !== id));
+        setRefresh((prev) => !prev);
       } else {
         alert(data.message || "Failed to delete address.");
       }
@@ -104,6 +106,7 @@ const Address = () => {
           )
         );
         closeAddressManager();
+        setRefresh((prev) => !prev);
       } else {
         alert(data.message || "Failed to update address.");
       }
@@ -133,6 +136,7 @@ const Address = () => {
       if (response.ok) {
         setAddresses([...addresses, data.address]);
         closeAddressManager();
+        setRefresh((prev) => !prev);
       } else {
         alert(data.message || "Failed to add address.");
       }

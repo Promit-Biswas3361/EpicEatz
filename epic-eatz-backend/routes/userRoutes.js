@@ -3,6 +3,7 @@ const auth = require("../middleware/auth");
 const User = require("../models/User");
 const Orders = require("../models/Orders");
 const Address = require("../models/Address");
+const Favourite = require("../models/Favourite");
 const bcrypt = require("bcryptjs");
 
 const router = express.Router();
@@ -26,6 +27,7 @@ router.get("/orders", auth, async (req, res) => {
     const orders = await Orders.find({ userId })
       .populate("restaurantId", "restaurantName")
       .populate("addressId", "label address")
+      .sort({ createdAt: -1 })
       .lean();
 
     const formattedOrders = orders.map((order) => ({
@@ -166,6 +168,52 @@ router.delete("/address/delete/:id", auth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete address" });
+  }
+});
+
+router.get("/favourites", auth, async (req, res) => {
+  try {
+    const favourites = await Favourite.find({
+      userId: req.user.userId,
+    }).populate("restaurantId", "restaurantName restaurantRating");
+
+    const formattedFavourites = favourites.map((favourite) => ({
+      id: favourite._id,
+      restaurant_name: favourite.restaurantId?.restaurantName || "N/A",
+      restaurant_rating: favourite.restaurantId?.restaurantRating || 0,
+      item: {
+        name: favourite.item.name,
+        price: favourite.item.price,
+        category: favourite.item.category,
+        img: favourite.item.img,
+        qty: favourite.item.qty,
+      },
+    }));
+
+    res.status(200).json({ favourites: formattedFavourites });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch addresses" });
+  }
+});
+
+router.delete("/favourite/delete/:id", auth, async (req, res) => {
+  try {
+    const favouriteId = req.params.id;
+
+    const deleted = await Favourite.findOneAndDelete({
+      _id: favouriteId,
+      userId: req.user.userId,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    res.status(200).json({ message: "Item deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete item" });
   }
 });
 
