@@ -20,7 +20,10 @@ const RestaurantSchema = new mongoose.Schema({
   menu: [
     {
       name: String,
-      category: String,
+      category: {
+        type: String,
+        enum: ["Veg", "Non Veg"],
+      },
       price: Number,
       imageUrl: String,
     },

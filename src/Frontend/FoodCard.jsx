@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Star, IndianRupee, Heart } from "lucide-react";
 import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
+import { useSelector } from "react-redux";
 
 const FoodCard = ({ dish }) => {
   const [count, setCount] = useState(0);
   const [favourite, setFavourite] = useState(false);
+
+  const { isAuthenticated, role } = useSelector((state) => state.login);
 
   return (
     <div className="flex flex-col bg-white p-5 rounded-2xl w-80 lg:w-100 mb-5">
@@ -33,45 +36,49 @@ const FoodCard = ({ dish }) => {
         <div className="flex flex-col items-center relative">
           <div className="rounded-2xl overflow-hidden">
             <img
-              src={dish.item.img}
+              src={dish.item.imgUrl}
               alt={dish.item.name}
               className="h-50 max-w-45 bg-red-200"
             />
           </div>
 
-          <div
-            className="absolute top-2 right-2 cursor-pointer"
-            onClick={() => setFavourite((prev) => !prev)}
-          >
-            <Heart color="white" fill={favourite ? "red" : "transparent"} />
-          </div>
+          {isAuthenticated && role === "User" && (
+            <div
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={() => setFavourite((prev) => !prev)}
+            >
+              <Heart color="white" fill={favourite ? "red" : "transparent"} />
+            </div>
+          )}
 
-          <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg absolute bottom-[-22px] text-lg font-bold text-green-600">
-            {count > 0 ? (
-              <div className="flex flex-row justify-between">
+          {isAuthenticated && role === "User" && (
+            <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg absolute bottom-[-22px] text-lg font-bold text-green-600">
+              {count > 0 ? (
+                <div className="flex flex-row justify-between">
+                  <button
+                    className="cursor-pointer mr-5"
+                    onClick={() => setCount(count - 1)}
+                  >
+                    -
+                  </button>
+                  <p>{count}</p>
+                  <button
+                    className="cursor-pointer ml-5"
+                    onClick={() => setCount(count + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              ) : (
                 <button
-                  className="cursor-pointer mr-5"
-                  onClick={() => setCount(count - 1)}
-                >
-                  -
-                </button>
-                <p>{count}</p>
-                <button
-                  className="cursor-pointer ml-5"
+                  className="cursor-pointer"
                   onClick={() => setCount(count + 1)}
                 >
-                  +
+                  ADD
                 </button>
-              </div>
-            ) : (
-              <button
-                className="cursor-pointer"
-                onClick={() => setCount(count + 1)}
-              >
-                ADD
-              </button>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
