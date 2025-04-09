@@ -19,39 +19,38 @@ const Orders = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      const fetchUserOrders = async () => {
-        let token = localStorage.getItem("token");
-        if (!token) {
-          navigate("/"); // Redirect if not logged in
-          return;
-        }
-  
-        try {
-          const response = await fetch("http://localhost:5000/api/user/orders", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-  
-          const data = await response.json();
-          console.log(data.orders)
-          if (response.ok) {
-            setOrders(data.orders);
-          } else {
-            alert(data.message);
-            localStorage.removeItem("token"); // Clear invalid token
-            navigate("/");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          localStorage.removeItem("token"); // Remove token in case of error
+    const fetchUserOrders = async () => {
+      let token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/"); // Redirect if not logged in
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/api/user/orders", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setOrders(data.orders);
+        } else {
+          alert(data.message);
+          localStorage.removeItem("token"); // Clear invalid token
           navigate("/");
         }
-      };
-  
-      fetchUserOrders();
-    }, [navigate]);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        localStorage.removeItem("token"); // Remove token in case of error
+        navigate("/");
+      }
+    };
+
+    fetchUserOrders();
+  }, [navigate]);
 
   const cancelOrder = async (id) => {
     const token = localStorage.getItem("token");
@@ -88,7 +87,6 @@ const Orders = () => {
       alert("Something went wrong");
     }
   };
-
 
   const viewOrderDetails = (order) => {
     setSelectedOrder(order);
