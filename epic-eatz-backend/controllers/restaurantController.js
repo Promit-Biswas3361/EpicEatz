@@ -18,15 +18,17 @@ exports.registerRestaurant = async (req, res) => {
     } = req.body;
 
     const address = {
-      line: req.body["address[line]"],
-      city: req.body["address[city]"],
-      pin: req.body["address[pin]"],
-      state: req.body["address[state]"],
+      street: req.body["address[street]"] || "", // Map street to line
+      city: req.body["address[city]"] || "",
+      pin: req.body["address[pin]"] || "",
+      state: req.body["address[state]"] || ""
     };
 
-    const openDays = Array.isArray(req.body["openDays[]"])
-      ? req.body["openDays[]"]
-      : [req.body["openDays[]"]];
+    const openDays = req.body["openDays[]"] 
+      ? (Array.isArray(req.body["openDays[]"]) 
+          ? req.body["openDays[]"].filter(Boolean) // Remove null/empty
+          : [req.body["openDays[]"]].filter(Boolean)) 
+      : [];
 
     const menu = [];
     const imageFiles = req.files["images"] || [];

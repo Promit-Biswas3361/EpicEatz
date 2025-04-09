@@ -18,9 +18,6 @@ const Step1 = () => {
       state: "",
       pin: ""
     },
-    city: "",
-    pin: "",
-    state: "",
   });
 
   const handleChange = (e) => {
