@@ -3,12 +3,16 @@ import { Star, IndianRupee, Heart } from "lucide-react";
 import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 import { useSelector } from "react-redux";
+import { useCart } from "./context/CartContext"; // Adjust the path if needed
 
 const FoodCard = ({ dish }) => {
   const [count, setCount] = useState(0);
   const [favourite, setFavourite] = useState(false);
 
   const { isAuthenticated, role } = useSelector((state) => state.login);
+  const { addToCart } = useCart();
+
+  const category = dish.item.category?.toLowerCase();
 
   return (
     <div className="flex flex-col bg-white p-5 rounded-2xl w-80 lg:w-100 mb-5">
@@ -21,10 +25,10 @@ const FoodCard = ({ dish }) => {
       </div>
       <div className="flex flex-row items-center mt-4 mb-3 justify-between">
         <div className="flex flex-col mr-6">
-          {dish.item.category == "Veg" && (
+          {category === "veg" && (
             <img src={veg} alt="Veg" className="h-7 w-7" />
           )}
-          {dish.item.category == "Non Veg" && (
+          {category === "non veg" && (
             <img src={nonveg} alt="Non Veg" className="h-6 w-6" />
           )}
           <p className="text-lg font-bold">{dish.item.name}</p>
@@ -72,7 +76,21 @@ const FoodCard = ({ dish }) => {
               ) : (
                 <button
                   className="cursor-pointer"
-                  onClick={() => setCount(count + 1)}
+                  onClick={() => {
+                    setCount(count + 1);
+                    addToCart({
+                      restaurantId: dish.restaurantId, // ensure this is passed from parent
+                      restaurant_name: dish.restaurant_name,
+                      restaurant_rating: dish.restaurant_rating,
+                      item: {
+                        name: dish.item.name,
+                        price: dish.item.price,
+                        category: dish.item.category,
+                        img: dish.item.imgUrl,
+                        qty: 1,
+                      },
+                    });
+                  }}
                 >
                   ADD
                 </button>

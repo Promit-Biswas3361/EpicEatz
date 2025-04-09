@@ -1,3 +1,8 @@
+// 🛠 CHANGES MADE:
+// - Added null checks inside reduce
+// - Added optional chaining (item?.item?.price)
+// - Filter out invalid items before rendering
+
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -12,26 +17,42 @@ const Cart = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
 
-  // 🛒 Get cart items on load
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await axios.get("/api/cart", { withCredentials: true });
-        setCartItems(res.data.cartItems);
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found. Redirecting to login...");
+          navigate("/login");
+          return;
+        }
+
+        const res = await axios.get("/api/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setCartItems(res.data.cartItems || []);
       } catch (error) {
         console.error("Error fetching cart:", error);
+        if (error.response && error.response.status === 401) {
+          navigate("/login");
+        }
       }
     };
+
     fetchCart();
   }, []);
 
-  // 💰 Calculate totals
+  // 💰 Calculate totals safely
   useEffect(() => {
-    if (cartItems.length > 0) {
-      let subtotal = cartItems.reduce(
-        (acc, item) => acc + item.item.price * item.item.qty,
-        0
-      );
+    if (Array.isArray(cartItems)) {
+      let subtotal = cartItems.reduce((acc, item) => {
+        if (!item?.item) return acc;
+        return acc + item.item.price * item.item.qty;
+      }, 0);
+
       setItemTotal(subtotal);
       const total = Math.round(subtotal * 1.05 + 40);
       setTotalAmount(total);
@@ -49,14 +70,16 @@ const Cart = () => {
       }
     } else {
       try {
-        const res = await axios.patch(
+        await axios.patch(
           `/api/cart/${id}`,
           { qty: newQty },
           { withCredentials: true }
         );
         setCartItems((prev) =>
           prev.map((item) =>
-            item._id === id ? { ...item, item: { ...item.item, qty: newQty } } : item
+            item._id === id
+              ? { ...item, item: { ...item.item, qty: newQty } }
+              : item
           )
         );
       } catch (error) {
@@ -74,13 +97,15 @@ const Cart = () => {
         {cartItems.length > 0 ? (
           <div className="py-8 sm:mt-5 md:flex">
             <div className="flex flex-col md:flex-2/3 bg-white rounded-lg px-4 lg:px-7">
-              {cartItems.map((item) => (
-                <CartItem
-                  key={item._id}
-                  item={item}
-                  updateItemQty={updateItemQty}
-                />
-              ))}
+              {cartItems
+                .filter((item) => item?.item) // 💡 Only render valid items
+                .map((item) => (
+                  <CartItem
+                    key={item._id}
+                    item={item}
+                    updateItemQty={updateItemQty}
+                  />
+                ))}
 
               <div className="flex flex-row items-center justify-between text-lg my-4 text-right">
                 <div className="flex items-center">
@@ -97,7 +122,7 @@ const Cart = () => {
               </div>
             </div>
 
-            {/* Right Bill Section */}
+            {/* 🧾 Bill Section */}
             <div className="bg-white max-h-fit md:flex-1/3 md:ml-5 rounded-lg md:max-w-85 px-3 lg:px-5 py-4 mt-10 md:mt-0 text-sm">
               <p className="text-lg text-center font-bold mb-3">Bill Details</p>
               <div className="border-b-1 border-gray-300 mb-2">

@@ -75,6 +75,7 @@ const Step3 = () => {
         }
       });
 
+      console.log(menu, openDays, address)
       // Documents
       fullForm.append("pan", formData.pan);
       fullForm.append("ifsc", formData.ifsc);

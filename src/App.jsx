@@ -21,6 +21,7 @@ import OwnerSettings from "./Frontend/OwnerProfile/OwnerSettings";
 import MenuTimings from "./Frontend/OwnerProfile/MenuTimings";
 import RestaurantDetails from "./Frontend/OwnerProfile/RestaurantDetails";
 
+
 function App() {
   return (
     <Router>
