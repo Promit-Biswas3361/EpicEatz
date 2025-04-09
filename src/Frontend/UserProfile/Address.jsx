@@ -1,52 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { House, Building, MapPin } from "lucide-react";
 import AddressManager from "./AddressManager";
-
-const userAddresses = [
-  {
-    id: 1,
-    label: "Home Address",
-    type: "Home",
-    address: "123 Main Street, Apartment 4B, New York, NY 10001",
-    phone: "+1 212-555-1234",
-  },
-  {
-    id: 2,
-    label: "Office Address",
-    type: "Office",
-    address: "456 Corporate Blvd, Suite 1203, San Francisco, CA 94105",
-    phone: "+1 415-555-9876",
-  },
-  {
-    id: 3,
-    label: "Summer House",
-    type: "Home",
-    address: "789 Beachfront Road, Unit 5, Miami Beach, FL 33139",
-    phone: "+1 305-555-5678",
-  },
-  {
-    id: 4,
-    label: "Parents' House",
-    type: "Others",
-    address: "101 Oak Drive, Suburbia, Chicago, IL 60007",
-    phone: "+1 312-555-2345",
-  },
-  {
-    id: 5,
-    label: "Vacation Spot",
-    type: "Home",
-    address: "202 Mountain View Lane, Aspen, CO 81611",
-    phone: "+1 970-555-8765",
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 const Address = () => {
-  const [addresses, setAddresses] = useState(userAddresses);
+  const [addresses, setAddresses] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
 
-  const deleteAddress = (id) => {
-    setAddresses(addresses.filter((item) => item.id !== id));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/"); // Redirect if not logged in
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/user/addresses",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          setAddresses(data.addresses);
+        } else {
+          alert(data.message || "Failed to fetch addresses.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch addresses: ", err);
+      }
+    };
+
+    fetchAddresses();
+  }, [addresses]);
+
+  const deleteAddress = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/"); // Redirect if not logged in
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/user/address/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setAddresses(addresses.filter((item) => item.id !== id));
+      } else {
+        alert(data.message || "Failed to delete address.");
+      }
+    } catch (err) {
+      console.error("Failed to delete address: ", err);
+    }
   };
 
   const closeAddressManager = () => {
@@ -54,23 +76,69 @@ const Address = () => {
     setIsAdding(false);
   };
 
-  const updateAddress = (updatedAddress) => {
-    setAddresses(
-      addresses.map((item) =>
-        item.id === updatedAddress.id ? updatedAddress : item
-      )
-    );
-    closeAddressManager();
+  const updateAddress = async (updatedAddress) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/user/address/update/${updatedAddress._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedAddress),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setAddresses(
+          addresses.map((item) =>
+            item._id === updatedAddress._id ? data.address : item
+          )
+        );
+        closeAddressManager();
+      } else {
+        alert(data.message || "Failed to update address.");
+      }
+    } catch (err) {
+      console.error("Failed to update address:", err);
+    }
   };
 
-  const addNewAddress = (newAddress) => {
-    const validAddress = addresses || [];
+  const addNewAddress = async (newAddress) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/"); // Redirect if not logged in
+      return;
+    }
 
-    const newId = validAddress.length
-      ? Math.max(...validAddress.map((item) => item.id)) + 1
-      : 1;
-    setAddresses([...validAddress, { ...newAddress, id: newId }]);
-    closeAddressManager();
+    try {
+      const response = await fetch(`http://localhost:5000/api/user/add-address/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newAddress),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setAddresses([...addresses, data.address]);
+        closeAddressManager();
+      } else {
+        alert(data.message || "Failed to add address.");
+      }
+    } catch (err) {
+      console.error("Failed to add address: ", err);
+    }
   };
 
   const openAddAddress = () => {
@@ -96,7 +164,7 @@ const Address = () => {
           addresses.length > 0 &&
           addresses.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="flex items-start border-1 border-gray-400 p-3 mb-2 max-sm:w-full sm:w-70 md:w-80"
             >
               <div className="flex-1/6 mt-1">
@@ -129,7 +197,7 @@ const Address = () => {
                   </button>
                   <button
                     className="text-red-500 hover:text-red-700 font-bold cursor-pointer"
-                    onClick={() => deleteAddress(item.id)}
+                    onClick={() => deleteAddress(item._id)}
                   >
                     DELETE
                   </button>
