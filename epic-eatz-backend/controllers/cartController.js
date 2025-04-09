@@ -3,11 +3,12 @@ const Cart = require("../models/Cart");
 const getCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ userId: req.user.userId });
-    res.json(cart?.items || []);
+    res.json({ cartItems: cart?.items || [] });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const addToCart = async (req, res) => {
   try {

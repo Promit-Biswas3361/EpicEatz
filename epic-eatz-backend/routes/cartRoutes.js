@@ -9,11 +9,14 @@ const {
 const auth = require("../middleware/auth");
 
 const router = express.Router();
+
+// ✅ Apply auth middleware to ALL routes
 router.use(auth);
-router.get("/", auth, getCart);
-router.post("/", auth, addToCart);
-router.put("/:itemId", auth, updateItemQty);
-router.delete("/:itemId", auth, removeFromCart);
-router.delete("/", auth, clearCart);
+
+router.get("/", getCart);
+router.post("/", addToCart);
+router.put("/:itemId", updateItemQty);
+router.delete("/:itemId", removeFromCart);
+router.delete("/", clearCart);
 
 module.exports = router;

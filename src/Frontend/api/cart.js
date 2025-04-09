@@ -1,26 +1,32 @@
-// api/cart.js
-import axios from "./axios"; 
+import axios from "axios";
+
+
+const getAuthHeader = () => ({
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+});
 
 export const fetchCart = async () => {
-  const res = await axios.get("/cart");
+  const res = await axios.get("/api/cart", getAuthHeader());
   return res.data;
 };
 
 export const addItemToCart = async (item) => {
-  const res = await axios.post("/cart", { item });
+  const res = await axios.post("/api/cart", { item }, getAuthHeader());
   return res.data;
 };
 
 export const updateCartItem = async (itemId, qty) => {
-  const res = await axios.put(`/cart/${itemId}`, { qty });
+  const res = await axios.put(`/api/cart/${itemId}`, { qty }, getAuthHeader());
   return res.data;
 };
 
 export const removeCartItem = async (itemId) => {
-  const res = await axios.delete(`/cart/${itemId}`);
+  const res = await axios.delete(`/api/cart/${itemId}`, getAuthHeader());
   return res.data;
 };
 
 export const clearCartItems = async () => {
-  await axios.delete("/cart");
+  await axios.delete("/api/cart", getAuthHeader());
 };

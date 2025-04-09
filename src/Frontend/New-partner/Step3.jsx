@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import NavbarPartner from "./NavbarPartner";
-import {
-  ConciergeBell,
-  ClipboardList,
-  ShieldCheck,
-} from "lucide-react";
+import { ConciergeBell, ClipboardList, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Step3 = () => {
@@ -32,106 +28,65 @@ const Step3 = () => {
     setFiles({ ...files, [e.target.name]: e.target.files[0] });
   };
 
-  const flattenFormData = (formData, parentKey = "") => {
-    const result = [];
-  
-    for (const key in formData) {
-      const value = formData[key];
-      const fullKey = parentKey ? `${parentKey}[${key}]` : key;
-  
-      if (Array.isArray(value)) {
-        if (typeof value[0] === "object") {
-          value.forEach((obj, index) => {
-            for (const objKey in obj) {
-              if (objKey === "image" && obj[objKey]) {
-                result.push([`menuItems[${index}][image]`, obj[objKey]]);
-              } else {
-                result.push([`menuItems[${index}][${objKey}]`, obj[objKey]]);
-              }
-            }
-          });
-        } else {
-          value.forEach((item) => result.push([`${fullKey}[]`, item]));
-        }
-      } else if (typeof value === "object" && value !== null) {
-        result.push(...flattenFormData(value, fullKey));
-      } else {
-        result.push([fullKey, value]);
-      }
-    }
-  
-    return result;
-  };
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-  
+
     try {
       const step1 = JSON.parse(localStorage.getItem("restaurantStep1"));
       const step2 = JSON.parse(localStorage.getItem("restaurantStep2"));
-  
+
       if (!step1 || !step2) {
         alert("Incomplete form data. Please complete all steps.");
         return;
       }
-  
-      const fullForm = new FormData();
-  
-      // Extract user fields
-      const {
-        email,
-        fullName: name,
-        restaurantName,
-        phone,
-        address,
-        city,
-        state,
-        pin,
-        ...restStep1
-      } = step1;
-      
-  
-      // ✅ Add user credentials
-      fullForm.append("email", email);
-      fullForm.append("name", name);
-      fullForm.append("phone", phone);
-      fullForm.append("password", formData.password);
-      fullForm.append("restaurantName", restaurantName);
 
-  
-      // ✅ Restaurant Info - Flatten rest of Step 1
-      const step1Pairs = flattenFormData(restStep1);
-      step1Pairs.forEach(([key, value]) => fullForm.append(key, value));
-  
-      // ✅ Address flattening
-      const addressPairs = flattenFormData(address, "address");
-      addressPairs.forEach(([key, value]) => fullForm.append(key, value));
-  
-      // ✅ Step 2 - Operational details
+      const fullForm = new FormData();
+
+      // User credentials
+      fullForm.append("email", step1.email);
+      fullForm.append("name", step1.fullName);
+      fullForm.append("phone", step1.phone);
+      fullForm.append("password", formData.password);
+      fullForm.append("restaurantName", step1.restaurantName);
+
+      // Address (now using street instead of line)
+      fullForm.append("address[street]", step1.address.street);
+      fullForm.append("address[city]", step1.address.city);
+      fullForm.append("address[state]", step1.address.state);
+      fullForm.append("address[pin]", step1.address.pin);
+
+      // Operational details
       fullForm.append("openTime", step2.openTime);
       fullForm.append("closeTime", step2.closeTime);
       step2.openDays.forEach((day) => fullForm.append("openDays[]", day));
-  
-      const menuPairs = flattenFormData({ menuItems: step2.menuItems });
-      menuPairs.forEach(([key, value]) => fullForm.append(key, value));
-  
-      // ✅ Step 3 - Bank details + file uploads
+
+      // Menu items (simplified approach)
+      step2.menuItems.forEach((item, index) => {
+        fullForm.append(`menu[${index}][name]`, item.name);
+        fullForm.append(`menu[${index}][price]`, item.price);
+        fullForm.append(`menu[${index}][category]`, item.category);
+        if (item.image) {
+          fullForm.append(`menu[${index}][image]`, item.image);
+        }
+      });
+
+      console.log(menu, openDays, address)
+      // Documents
       fullForm.append("pan", formData.pan);
       fullForm.append("ifsc", formData.ifsc);
       fullForm.append("accountNumber", formData.accountNumber);
-  
       fullForm.append("fssai", files.fssai);
       fullForm.append("gst", files.gst);
       fullForm.append("shopAct", files.shopAct);
       fullForm.append("bankProof", files.bankProof);
-  
+
       const token = localStorage.getItem("token");
-  
+
       const res = await fetch("http://localhost:5000/api/restaurant/register-partner", {
         method: "POST",
         headers: {
@@ -139,9 +94,9 @@ const Step3 = () => {
         },
         body: fullForm,
       });
-  
+
       const data = await res.json();
-  
+
       if (res.ok) {
         alert("Registration successful!");
         localStorage.removeItem("restaurantStep1");
@@ -156,7 +111,7 @@ const Step3 = () => {
       alert("Something went wrong. Please try again.");
     }
   };
-  
+
   return (
     <div className="bg-gray-100">
       <NavbarPartner />

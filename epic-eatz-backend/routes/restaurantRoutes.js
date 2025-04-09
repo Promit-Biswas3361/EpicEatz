@@ -9,12 +9,17 @@ router.post(
   "/register-partner",
   auth,
   upload.fields([
-    { name: "images", maxCount: 20 },
+    { name: "images", maxCount: 20 },  // for images
+    { name: "menuImages", maxCount: 20 },  // for menu images
     { name: "fssai", maxCount: 1 },
     { name: "gst", maxCount: 1 },
     { name: "shopAct", maxCount: 1 },
     { name: "bankProof", maxCount: 1 },
   ]),
+  (req, res, next) => {
+    console.log(req.files); // Debugging: Log uploaded files
+    next();
+  },
   registerRestaurant
 );
 

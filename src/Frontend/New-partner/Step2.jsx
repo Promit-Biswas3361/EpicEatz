@@ -34,8 +34,13 @@ const Step2 = () => {
     }
   
     const openDays = Array.from(form.openDays)
-      .filter((day) => day.checked)
-      .map((day) => day.value);
+      .filter(day => day.checked && day.value) // 🔥 Explicit check
+      .map(day => day.value);
+
+      if (openDays.length === 0) {
+        alert("Select at least one open day!");
+        return;
+      }
   
     const operationalData = {
       openTime: convertToAMPM(form.openTime.value),
