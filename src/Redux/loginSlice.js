@@ -28,6 +28,7 @@ const loginSlice = createSlice({
       state.user = null;
       state.error = null;
       state.role = null;
+      localStorage.removeItem("token");
     },
   },
 });

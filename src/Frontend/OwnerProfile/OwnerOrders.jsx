@@ -101,6 +101,12 @@ const OwnerOrders = () => {
     setSelectedOrder(null);
   };
 
+  const toggleEditingOrder = (order) => {
+    if (order.status === "Pending") {
+      setIsEditingOrderId((prev) => (prev === order.id ? null : order.id));
+    }
+  };
+
   const handleStatusChange = (newStatus, id) => {
     const updateOrders = orders.map((order) =>
       order.id === id ? { ...order, status: newStatus } : order
@@ -143,11 +149,7 @@ const OwnerOrders = () => {
                   className={`flex flex-shrink-0 items-center h-fit border-1 border-gray-200 rounded-full px-2 cursor-pointer hover:bg-gray-100 ${
                     isEditingOrderId === order.id ? "hidden" : ""
                   }`}
-                  onClick={() =>
-                    setIsEditingOrderId((prev) =>
-                      prev === order.id ? null : order.id
-                    )
-                  }
+                  onClick={() => toggleEditingOrder(order)}
                 >
                   <CircleSmall
                     size={13}

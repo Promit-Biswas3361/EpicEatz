@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FavouritesCard from "./FavouritesCard";
+import { useNavigate } from "react-router-dom";
 
 const favouriteItems = [
   {
@@ -171,9 +172,70 @@ const favouriteItems = [
 
 const Favourites = () => {
   const [favourites, setFavourites] = useState(favouriteItems);
+  const [refresh, setRefresh] = useState(false);
 
-  const deleteFavourites = (id) => {
-    setFavourites(favourites.filter((item) => item.id !== id));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserFavourites = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/user/favourites",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          setFavourites(data.favourites);
+        } else {
+          alert(data.message || "Error fetching favourites");
+        }
+      } catch (err) {
+        console.error("Error in fetching favourites: ", err);
+      }
+    };
+
+    fetchUserFavourites();
+  }, [refresh]);
+
+  const deleteFavourites = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/user/favourite/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setFavourites(favourites.filter((item) => item.id !== id));
+        setRefresh((prev) => !prev);
+      } else {
+        alert(data.message || "Failed to delete favourite item.");
+      }
+    } catch (error) {
+      console.error("Couldn't delete favourite item.");
+    }
   };
 
   return (
@@ -186,7 +248,13 @@ const Favourites = () => {
 
       {favourites &&
         favourites.length > 0 &&
-        favourites.map((item) => <FavouritesCard key={item.id} item={item} onDelete={deleteFavourites} />)}
+        favourites.map((item) => (
+          <FavouritesCard
+            key={item.id}
+            item={item}
+            onDelete={deleteFavourites}
+          />
+        ))}
     </div>
   );
 };
