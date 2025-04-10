@@ -9,7 +9,6 @@ const { registerRestaurant } = require("../controllers/restaurantController");
 // restaurantRoutes.js
 router.post(
   "/register-partner",
-  auth,
   upload.fields([
     { name: "images", maxCount: 20 }, // for images
     { name: "menuImages", maxCount: 20 }, // for menu images
