@@ -24,6 +24,7 @@ export const CartProvider = ({ children }) => {
     try {
       const updated = await addItemToCart(item);
       setCart(updated);
+      return true;
     } catch (error) {
       if (
         error.response &&
@@ -37,10 +38,12 @@ export const CartProvider = ({ children }) => {
           await clearCartItems(); // backend clear
           const updated = await addItemToCart(item); // retry same item
           setCart(updated);
+          return true;
         }
       } else {
         console.error("Failed to add to cart:", error);
       }
+      return false;
     }
   };
 
