@@ -1,7 +1,8 @@
 import { IndianRupee } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import veg from "../../assets/veg.png";
 import nonveg from "../../assets/nonveg.jpg";
+import { useNavigate } from "react-router-dom";
 
 const menu1 = {
   dishes: [
@@ -79,15 +80,82 @@ const timings1 = {
 };
 
 const MenuTimings = () => {
-  const [timings, setTimings] = useState(timings1);
-  const [menu, setMenu] = useState(menu1);
+  const [restaurantInfo, setRestaurantInfo] = useState(null);
   const [editDish, setEditDish] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
-  const removeDish = (id) => {
-    setMenu((prevMenu) => ({
-      ...prevMenu,
-      dishes: prevMenu.dishes.filter((item) => item.id !== id),
-    }));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchMenuTimings = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/restaurant/menu",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          setRestaurantInfo(data.restaurant);
+          console.log("data.restaurant", data.restaurant);
+        } else {
+          alert(data.message);
+          localStorage.removeItem("token"); // Clear invalid token
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error fetching menu & timings:", error);
+        localStorage.removeItem("token"); // Remove token in case of error
+        navigate("/");
+      }
+    };
+
+    fetchMenuTimings();
+  }, [refresh]);
+
+  const removeDish = async (name) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/restaurant/menu/delete/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setRestaurantInfo((prevInfo) => ({
+          ...prevInfo,
+          menu: prevInfo.menu.filter((item) => item.name !== name),
+        }));
+        setRefresh((prev) => !prev);
+      } else {
+        alert(data.message || "Failed to delete menu item.");
+      }
+    } catch (err) {
+      console.error("Failed to delete menu item: ", err);
+    }
   };
 
   const handleEditChange = (e) => {
@@ -98,22 +166,50 @@ const MenuTimings = () => {
     }));
   };
 
-  const handleSave = () => {
-    setMenu((prevMenu) => ({
-      ...prevMenu,
-      dishes: prevMenu.dishes.map((item) =>
-        item.id === editDish.id
-          ? {
-              ...item,
-              name: editDish.name,
-              price: parseFloat(editDish.price),
-              img: editDish.img,
-              category: editDish.category,
-            }
-          : item
-      ),
-    }));
-    setEditDish(null);
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/restaurant/menu/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(editDish),
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        setRestaurantInfo((prev) => ({
+          ...prev,
+          menu: prev.menu.map((item) =>
+            item.name === editDish.name
+              ? {
+                  ...item,
+                  name: editDish.name,
+                  price: parseFloat(editDish.price),
+                  img: editDish.img,
+                  category: editDish.category,
+                }
+              : item
+          ),
+        }));
+        setEditDish(null);
+        setRefresh((prev) => !prev);
+      } else {
+        alert(data.message || "Failed to update menu.");
+      }
+    } catch (err) {
+      console.error("Error updating menu: ", err);
+    }
   };
 
   return (
@@ -127,21 +223,21 @@ const MenuTimings = () => {
         <div className="px-4 mt-4.5">
           <div className="flex items-center mb-2.5">
             <p className="font-bold text-gray-700 mr-2">Open time: </p>
-            <p>{timings.open}</p>
+            <p>{restaurantInfo?.openTime}</p>
           </div>
           <div className="flex items-center mb-2.5">
             <p className="font-bold text-gray-700 mr-2">Close time: </p>
-            <p>{timings.close}</p>
+            <p>{restaurantInfo?.closeTime}</p>
           </div>
           <div className="flex items-start">
             <p className="font-bold text-gray-700 mr-2 flex-shrink-0">
               Days Open:{" "}
             </p>
             <div className="flex flex-wrap">
-              {timings.days.map((day, index) => (
+              {restaurantInfo?.openDays.map((day, index) => (
                 <span key={index} className="flex">
                   {day}
-                  {index < timings.days.length - 1 && <pre>, </pre>}
+                  {index < restaurantInfo.openDays.length - 1 && <pre>, </pre>}
                 </span>
               ))}
             </div>
@@ -154,16 +250,16 @@ const MenuTimings = () => {
           Menu
         </p>
         <div className="px-4 mt-4.5">
-          {menu.dishes.map((item, index) => (
+          {restaurantInfo?.menu.map((item, index) => (
             <div
-              key={item.id}
+              key={index}
               className="border-1 border-gray-400 flex flex-col mb-3.5 py-2.5"
             >
               <div className="flex justify-between items-center px-3 mb-5">
                 <div className="flex items-center">
                   <p>{index + 1}.</p>
                   <img
-                    src={item.img}
+                    src={item.imgUrl}
                     alt={item.name}
                     className="h-15 w-15 sm:h-20 sm:w-20 md:h-27 md:w-27 ml-4"
                   />
@@ -181,9 +277,7 @@ const MenuTimings = () => {
                       />
                     )}
                   </div>
-                  <p className="font-bold text-center">
-                    {item.name}
-                  </p>
+                  <p className="font-bold text-center">{item.name}</p>
                 </div>
 
                 <div className="flex items-center">
@@ -194,13 +288,18 @@ const MenuTimings = () => {
               <div className="flex w-full justify-center">
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white font-semibold w-[82px] py-0.5 cursor-pointer rounded-md mx-2"
-                  onClick={() => removeDish(item.id)}
+                  onClick={() => removeDish(item.name)}
                 >
                   REMOVE
                 </button>
                 <button
                   className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold w-[82px] py-0.5 cursor-pointer rounded-md mx-2"
-                  onClick={() => setEditDish(item)}
+                  onClick={() =>
+                    setEditDish({
+                      ...item,
+                      originalName: item.name,
+                    })
+                  }
                 >
                   EDIT
                 </button>
@@ -251,7 +350,7 @@ const MenuTimings = () => {
               <input
                 type="text"
                 name="img"
-                value={editDish.img}
+                value={editDish.imgUrl}
                 onChange={handleEditChange}
                 className="border-2 p-2 w-full mb-3"
               />

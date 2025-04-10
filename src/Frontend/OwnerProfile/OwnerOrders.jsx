@@ -1,83 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IndianRupee, CircleSmall } from "lucide-react";
 import OrderDetails from "./OrderDetails";
-
-const newOrders = [
-  {
-    id: 1,
-    restaurant: "Hungry House",
-    items: [
-      {
-        name: "Margherita Pizza",
-        price: 299,
-        category: "Veg",
-        img: "https://www.cookwithmanali.com/wp-content/uploads/2020/06/Margherita-Pizza-500x500.jpg",
-        qty: 2,
-      },
-      {
-        name: "Garlic Bread",
-        price: 149,
-        category: "Veg",
-        img: "https://www.cookingclassy.com/wp-content/uploads/2019/10/garlic-bread-2-768x1152.jpg",
-        qty: 1,
-      },
-    ],
-    total: 824,
-    status: "Delivered",
-    date: "2025-03-14",
-    address: {
-      label: "Home Address",
-      address: "123 Main Street, Apartment 4B, New York, NY 10001",
-    },
-  },
-  {
-    id: 2,
-    restaurant: "Hungry House",
-    items: [
-      {
-        name: "Salmon Roll",
-        price: 450,
-        category: "Non Veg",
-        img: "https://www.allrecipes.com/thmb/-QGvCN5xwJBpQfoa4OY6Cvh66Cw=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/1437018-Spicy-Salmon-Sushi-Roll-ddmfs-4x3-2c496fdfd3e14bc78a9ab67036221918.jpg",
-        qty: 3,
-      },
-      {
-        name: "Miso Soup",
-        price: 120,
-        category: "Veg",
-        img: "https://www.thespruceeats.com/thmb/g5cE8GqcsPpVsW4c4FXP8qObioI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/miso-soup-recipe-3121935-hero-01-8d10a14fb2c544f388650c8c08f8b37a.jpg",
-        qty: 1,
-      },
-    ],
-    total: 1584,
-    status: "Cancelled",
-    date: "2025-03-12",
-    address: {
-      label: "Office Address",
-      address: "456 Corporate Blvd, Suite 1203, San Francisco, CA 94105",
-    },
-  },
-  {
-    id: 3,
-    restaurant: "Hungry House",
-    items: [
-      {
-        name: "Cappuccino",
-        price: 150,
-        category: "Veg",
-        img: "https://www.allrecipes.com/thmb/chsZz0jqIHWYz39ViZR-9k_BkkE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/8624835-how-to-make-a-cappuccino-beauty-4x3-0301-13d55eaad60b42058f24369c292d4ccb.jpg",
-        qty: 5,
-      },
-    ],
-    total: 828,
-    status: "Pending",
-    date: "2025-03-10",
-    address: {
-      label: "Summer House",
-      address: "789 Beachfront Road, Unit 5, Miami Beach, FL 33139",
-    },
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -89,9 +13,45 @@ const formatDate = (dateString) => {
 };
 
 const OwnerOrders = () => {
-  const [orders, setOrders] = useState(newOrders);
+  const [orders, setOrders] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isEditingOrderId, setIsEditingOrderId] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserOrders = async () => {
+      let token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/api/restaurant/orders", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setOrders(data.orders);
+        } else {
+          alert(data.message);
+          localStorage.removeItem("token"); // Clear invalid token
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        localStorage.removeItem("token"); // Remove token in case of error
+        navigate("/");
+      }
+    };
+
+    fetchUserOrders();
+  }, [navigate]);
 
   const viewOrderDetails = (order) => {
     setSelectedOrder(order);

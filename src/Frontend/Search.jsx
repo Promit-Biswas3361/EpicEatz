@@ -18,18 +18,23 @@ const Search = () => {
         {searchResult && searchResult.length > 0 ? (
           <>
             {isDish && (
-              <div className="flex flex-row flex-wrap justify-evenly bg-gray-100 py-8 rounded">
+              <div className="bg-gray-100 py-8 px-5 rounded">
                 {searchResult.map((restaurant, index) => (
-                  <div key={index}>
+                  <div
+                    key={index}
+                    className="flex flex-wrap justify-evenly"
+                  >
                     {restaurant.item.map((dish, i) => (
-                      <FoodCard
-                        key={i}
-                        dish={{
-                          item: dish,
-                          restaurant_name: restaurant.restaurant_name,
-                          restaurant_rating: restaurant.restaurant_rating,
-                        }}
-                      />
+                      <div className="w-fit" key={i}>
+                        <FoodCard
+                          dish={{
+                            item: dish,
+                            restaurantId: restaurant.restaurantId,
+                            restaurant_name: restaurant.restaurant_name,
+                            restaurant_rating: restaurant.restaurant_rating,
+                          }}
+                        />
+                      </div>
                     ))}
                   </div>
                 ))}

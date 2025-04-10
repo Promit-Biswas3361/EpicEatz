@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 const getAuthHeader = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -9,6 +8,7 @@ const getAuthHeader = () => ({
 
 export const fetchCart = async () => {
   const res = await axios.get("/api/cart", getAuthHeader());
+  // console.log("res.data from cart.js", res.data.cartItems);
   return res.data;
 };
 
