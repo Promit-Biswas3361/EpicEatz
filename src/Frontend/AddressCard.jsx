@@ -25,7 +25,7 @@ const AddressCard = ({ address, handleAddress }) => {
         <div className="flex mt-3 px-2 py-0.5 bg-green-600 hover:bg-green-800">
           <button
             className="text-white font-bold text-xs cursor-pointer"
-            onClick={() => handleAddress(address.id)}
+            onClick={() => handleAddress(address._id)}
           >
             DELIVER HERE
           </button>

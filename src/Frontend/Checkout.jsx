@@ -1,70 +1,108 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AddressCard from "./AddressCard";
 import { IndianRupee, MapPin } from "lucide-react";
-
-const userAddresses_temp = [
-  {
-    id: 1,
-    label: "Home Address",
-    type: "Home",
-    address: "123 Main Street, Apartment 4B, New York, NY 10001",
-    phone: "+1 212-555-1234",
-  },
-  {
-    id: 2,
-    label: "Office Address",
-    type: "Office",
-    address: "456 Corporate Blvd, Suite 1203, San Francisco, CA 94105",
-    phone: "+1 415-555-9876",
-  },
-  {
-    id: 3,
-    label: "Summer House",
-    type: "Home",
-    address: "789 Beachfront Road, Unit 5, Miami Beach, FL 33139",
-    phone: "+1 305-555-5678",
-  },
-  {
-    id: 4,
-    label: "Parents' House",
-    type: "Friends & Family",
-    address: "101 Oak Drive, Suburbia, Chicago, IL 60007",
-    phone: "+1 312-555-2345",
-  },
-  {
-    id: 5,
-    label: "Vacation Spot",
-    type: "Home",
-    address: "202 Mountain View Lane, Aspen, CO 81611",
-    phone: "+1 970-555-8765",
-  },
-];
+import { useCart } from "./context/CartContext";
 
 const Checkout = () => {
   const location = useLocation();
   const { totalAmount } = location.state || { totalAmount: 0 };
 
+  const { cart } = useCart();
+
   const [deliveryAddress, setDeliveryAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("COD");
-  const [userAddresses, setUserAddress] = useState(userAddresses_temp);
+  const [userAddresses, setUserAddresses] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleOrderSubmit = () => {
+  useEffect(() => {
+    const fetchUserAddresses = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/user/addresses",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          setUserAddresses(data.addresses);
+          console.log("data.addresses", data.addresses);
+        } else {
+          alert(data.message || "Failed to fetch addresses.");
+        }
+      } catch (err) {
+        console.error("Failed to fetch addresses: ", err);
+      }
+    };
+
+    fetchUserAddresses();
+    console.log("cart", cart);
+  }, []);
+
+  const handleOrderSubmit = async () => {
     if (!deliveryAddress) {
       alert("Please choose a valid delivery address.");
       return;
     }
-    alert("Order placed successfully!");
-    navigate("/order-confirmation");
-    console.log(deliveryAddress);
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    const orderData = {
+      addressId: deliveryAddress._id,
+      paymentMethod,
+      items: cart.cartItems.map((item) => ({
+        name: item.item.name,
+        category: item.item.category,
+        price: item.item.price,
+        imageUrl: item.item.img,
+        qty: item.item.qty,
+      })),
+      restaurantId: cart.cartItems[0].restaurantId,
+      total: totalAmount,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Order placed successfully!");
+        navigate("/order-confirmation");
+      } else {
+        alert(data.message || "Failed to place order.");
+      }
+    } catch (err) {
+      console.error("Order submission error: ", err);
+      alert("Something went wrong while placing the order.");
+    }
   };
 
   const handleAddress = (id) => {
-    setDeliveryAddress(userAddresses.find((item) => item.id === id));
+    setDeliveryAddress(userAddresses.find((item) => item._id === id));
     console.log(deliveryAddress);
   };
 
@@ -110,7 +148,7 @@ const Checkout = () => {
               <div className="flex flex-wrap gap-3">
                 {userAddresses.map((address) => (
                   <AddressCard
-                    key={address.id}
+                    key={address._id}
                     address={address}
                     handleAddress={handleAddress}
                   />
