@@ -27,7 +27,15 @@ const orderSchema = new mongoose.Schema(
       enum: ["Pending", "Delivered", "Cancelled"],
       default: "Pending",
     },
-    date: Date,
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "Card"],
+      required: true,
+    },
     addressId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",

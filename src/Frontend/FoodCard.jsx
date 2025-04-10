@@ -17,24 +17,26 @@ const FoodCard = ({ dish }) => {
   const category = dish.item.category?.toLowerCase();
 
   // Helper to find existing cart item
-  const getExistingItem = () =>
-    cart?.cartItems?.find(
-      (item) =>
-        item.restaurantId === restaurantId && item.item?.name === itemName
+  const getExistingItem = () => {
+    return cart?.cartItems?.find(
+      (dish) =>
+        dish.restaurantId === restaurantId && dish.item?.name === itemName
     );
+  };
 
   // Sync count on mount or cart change
   useEffect(() => {
     const existing = getExistingItem();
+    console.log("existing", existing);
     setCount(existing ? existing.item.qty : 0);
-  }, [cart]);
+  }, [cart, addToCart, updateQty, removeFromCart]);
 
   const handleAdd = async () => {
-    const existing = getExistingItem();
-    if (!existing) {
-      alert("Cant add items form multiple restaurants");
-      return;
-    }
+    // const existing = getExistingItem();
+    // if (!existing) {
+    //   alert("Cant add items form multiple restaurants");
+    //   return;
+    // }
 
     const itemPayload = {
       restaurantId: dish.restaurantId,
@@ -118,7 +120,6 @@ const FoodCard = ({ dish }) => {
               <Heart color="white" fill={favourite ? "red" : "transparent"} />
             </div>
           )}
-
 
           {isAuthenticated && role === "User" && (
             <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg absolute bottom-[-22px] text-lg font-bold text-green-600">

@@ -9,11 +9,11 @@ const getCart = async (req, res) => {
   }
 };
 
-
 const addToCart = async (req, res) => {
   try {
     const { item } = req.body;
     let cart = await Cart.findOne({ userId: req.user.userId });
+    console.log("cart", cart);
 
     if (!cart) {
       cart = new Cart({ userId: req.user.userId, items: [item] });
@@ -24,14 +24,14 @@ const addToCart = async (req, res) => {
 
       if (hasDifferentRestaurant) {
         return res.status(400).json({
-          message: "Cannot add items from multiple restaurants. Please clear the cart first.",
+          message:
+            "Cannot add items from multiple restaurants. Please clear the cart first.",
         });
       }
 
       const exists = cart.items.find(
         (i) =>
-          i.item.name === item.item.name &&
-          i.restaurantId === item.restaurantId
+          i.item.name === item.item.name && i.restaurantId === item.restaurantId
       );
 
       if (exists) {
