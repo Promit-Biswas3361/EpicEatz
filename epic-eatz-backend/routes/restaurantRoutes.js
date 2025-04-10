@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const upload = require("../utils/multerConfig");
-const Restaurant = require("../models/Restaurant")
+const Restaurant = require("../models/Restaurant");
 const Orders = require("../models/Orders");
 const { registerRestaurant } = require("../controllers/restaurantController");
 
@@ -57,6 +57,32 @@ router.get("/orders", auth, async (req, res) => {
   } catch (error) {
     console.error("Error fetching orders:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.get("/details", auth, async (req, res) => {
+  try {
+    const restaurant = await Restaurant.findOne({
+      owner: req.user.userId,
+    }).select("restaurantName, address");
+
+    res.status(200).json({ restaurant });
+  } catch (err) {
+    console.error("Error fetching restaurant details: ", err);
+    res.status(500).json({ message: "Internal Server Error." });
+  }
+});
+
+router.get("/menu", auth, async (req, res) => {
+  try {
+    const restaurant = await Restaurant.findOne({
+      owner: req.user.userId,
+    }).select("menu openTime closeTime openDays");
+
+    res.status(200).json({ restaurant });
+  } catch (error) {
+    console.error("Error fetching restaurant details: ", error);
+    res.status(500).json({ message: "Internal Server Error." });
   }
 });
 

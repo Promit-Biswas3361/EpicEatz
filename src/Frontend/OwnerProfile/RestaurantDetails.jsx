@@ -1,22 +1,79 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const RestaurantInfo1 = {
-  restaurant_name: "Hungry House",
-  restaurant_owner: {
-    name: "Santhosh Kamath",
-    email: "santhosh.kamath@yahoo.com",
-    phone: "9820243177",
-  },
-  restaurant_address: {
-    address: "1st floor, Student Plaza, MIT Campus, Manipal, Karnataka",
-    city: "Manipal",
-    state: "Karnataka",
-    PIN: 576104,
-  },
-};
+const RestaurantDetails = ({ userInfo }) => {
+  const [restaurantInfo, setRestaurantInfo] = useState(null);
+  const [ownerInfo, setOwnerInfo] = useState(userInfo);
 
-const RestaurantDetails = () => {
-  const [restaurantInfo, setRestaurantInfo] = useState(RestaurantInfo1);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchRestaurantDetails = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        Navigate("/");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/restaurant/details",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          console.log("data.restaurant", data.restaurant);
+          setRestaurantInfo(data.restaurant);
+        } else {
+          alert(data.message);
+          localStorage.removeItem("token"); // Clear invalid token
+          navigate("/");
+        }
+      } catch (err) {
+        console.error("Could not fetch restaurant data: ", err);
+        localStorage.removeItem("token"); // Remove token in case of error
+        navigate("/");
+      }
+    };
+
+    const fetchOwnerDetails = async () => {
+      let token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/"); // Redirect if not logged in
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/api/user/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setOwnerInfo(data);
+        } else {
+          alert(data.message);
+          localStorage.removeItem("token");
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        localStorage.removeItem("token");
+        navigate("/");
+      }
+    };
+
+    fetchRestaurantDetails();
+    fetchOwnerDetails();
+  }, []);
 
   return (
     <div>
@@ -29,16 +86,16 @@ const RestaurantDetails = () => {
         <div className="px-4 mt-4.5">
           <div className="flex items-center mb-2.5">
             <p className="font-bold text-gray-700 mr-2">Name: </p>
-            <p>{restaurantInfo.restaurant_owner.name}</p>
+            <p>{ownerInfo?.name}</p>
           </div>
           <div className="flex items-center mb-2.5">
             <p className="font-bold text-gray-700 mr-2">Email: </p>
-            <p>{restaurantInfo.restaurant_owner.email}</p>
+            <p>{ownerInfo?.email}</p>
           </div>
           <div className="flex items-center">
             <p className="font-bold text-gray-700 mr-2">Phone No: </p>
             <p className="mr-1">+91</p>
-            <p>{restaurantInfo.restaurant_owner.phone}</p>
+            <p>{ownerInfo?.phone}</p>
           </div>
         </div>
       </div>
@@ -49,19 +106,19 @@ const RestaurantDetails = () => {
         <div className="px-4 mt-4.5">
           <div className="flex items-start mb-2.5">
             <p className="font-bold text-gray-700 mr-2">Address: </p>
-            <p>{restaurantInfo.restaurant_address.address}</p>
+            <p>{restaurantInfo?.address.line}</p>
           </div>
           <div className="flex items-center mb-2.5">
             <p className="font-bold text-gray-700 mr-2">City: </p>
-            <p>{restaurantInfo.restaurant_address.city}</p>
+            <p>{restaurantInfo?.address.city}</p>
           </div>
           <div className="flex items-center mb-2.5">
             <p className="font-bold text-gray-700 mr-2">State: </p>
-            <p>{restaurantInfo.restaurant_address.state}</p>
+            <p>{restaurantInfo?.address.state}</p>
           </div>
           <div className="flex items-center">
             <p className="font-bold text-gray-700 mr-2">PIN Code: </p>
-            <p>{restaurantInfo.restaurant_address.PIN}</p>
+            <p>{restaurantInfo?.address.pin}</p>
           </div>
         </div>
       </div>

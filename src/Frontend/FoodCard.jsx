@@ -3,8 +3,8 @@ import { Star, IndianRupee, Heart } from "lucide-react";
 import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 import { useSelector } from "react-redux";
-import { useCart } from "./context/CartContext"; // Adjust path if needed
-
+import { useCart } from "./context/CartContext";
+ 
 const FoodCard = ({ dish }) => {
   const [count, setCount] = useState(0);
   const [favourite, setFavourite] = useState(false);
