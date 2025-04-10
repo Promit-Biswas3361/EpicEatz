@@ -2,10 +2,28 @@ import React from "react";
 import veg from "../../assets/veg.png";
 import nonveg from "../../assets/nonveg.jpg";
 import { Star, IndianRupee, CircleMinus } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 const FavouritesCard = ({ item, onDelete }) => {
-  const addToCart = (item_name) => {
-    alert(`Added ${item_name} to your Cart`);
+  const { cart, addToCart } = useCart();
+
+  const handleAddToCart = async () => {
+    const itemPayload = {
+      restaurantId: item.restaurantId,
+      restaurant_name: item.restaurant_name,
+      restaurant_rating: item.restaurant_rating,
+      item: {
+        name: item.item.name,
+        price: item.item.price,
+        category: item.item.category,
+        img: item.item.img,
+        qty: 1,
+      },
+    };
+
+    const success = await addToCart(itemPayload);
+    if (success) alert(`Added ${item.item.name} to your Cart`);
+    console.log("item", item);
     return;
   };
 
@@ -29,7 +47,7 @@ const FavouritesCard = ({ item, onDelete }) => {
           <div className="absolute bottom-1.5 text-center w-full">
             <button
               className="bg-white text-green-600 rounded-md border-1 border-gray-400 px-2 py-1 font-bold cursor-pointer hover:bg-gray-100"
-              onClick={() => addToCart(item.item.name)}
+              onClick={handleAddToCart}
             >
               ADD
             </button>
