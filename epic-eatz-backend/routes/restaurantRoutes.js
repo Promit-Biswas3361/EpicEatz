@@ -86,4 +86,48 @@ router.get("/menu", auth, async (req, res) => {
   }
 });
 
+router.delete("/menu/delete/", auth, async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const restaurant = await Restaurant.findOne({ owner: req.user.userId });
+    if (!restaurant)
+      return res.status(404).json({ message: "Restaurant not found" });
+
+    restaurant.menu = restaurant.menu.filter((dish) => dish.name != name);
+
+    await restaurant.save();
+    res.status(200).json({ message: "Item removed successfully." });
+  } catch (error) {
+    console.error("Remove dish error:", err);
+    res.status(500).json({ message: "Server error while removing dish." });
+  }
+});
+
+router.put("/menu/update", auth, async (req, res) => {
+  const { originalName, name, price, category, imgUrl } = req.body;
+
+  try {
+    const restaurant = await Restaurant.findOne({ owner: req.user.userId });
+    if (!restaurant)
+      return res.status(404).json({ message: "Restaurant not found." });
+
+    const dish = restaurant.menu.find((item) => item.name === originalName);
+    if (!dish) return res.status(404).json({ message: "Dish not found." });
+
+    dish.name = name;
+    dish.category = category;
+    dish.price = price;
+    dish.imgUrl = imgUrl;
+
+    await restaurant.save();
+    res.status(200).json({ message: "Dish updated successfully" });
+  } catch (err) {
+    console.error("Error in updating dish: ", err);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error while updating dish" });
+  }
+});
+
 module.exports = router;

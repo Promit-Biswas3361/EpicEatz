@@ -4,7 +4,7 @@ import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 import { useSelector } from "react-redux";
 import { useCart } from "./context/CartContext";
- 
+
 const FoodCard = ({ dish }) => {
   const [count, setCount] = useState(0);
   const [favourite, setFavourite] = useState(false);
@@ -101,17 +101,15 @@ const FoodCard = ({ dish }) => {
           </div>
         </div>
 
-        {/* 🖼️ Dish Image + Controls */}
         <div className="flex flex-col items-center relative">
           <div className="rounded-2xl overflow-hidden">
             <img
               src={dish.item.imgUrl}
               alt={dish.item.name}
-              className="h-50 max-w-45 bg-red-200"
+              className="h-50 w-45"
             />
           </div>
 
-          {/* ❤️ Favourite Toggle */}
           {isAuthenticated && role === "User" && (
             <div
               className="absolute top-2 right-2 cursor-pointer"
@@ -121,7 +119,7 @@ const FoodCard = ({ dish }) => {
             </div>
           )}
 
-          {/* ➕➖ Add/Remove Controls */}
+
           {isAuthenticated && role === "User" && (
             <div className="bg-white border-1 border-gray-400 py-2 px-4 rounded-lg absolute bottom-[-22px] text-lg font-bold text-green-600">
               {count > 0 ? (

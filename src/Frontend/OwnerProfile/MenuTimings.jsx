@@ -82,6 +82,7 @@ const timings1 = {
 const MenuTimings = () => {
   const [restaurantInfo, setRestaurantInfo] = useState(null);
   const [editDish, setEditDish] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
   const navigate = useNavigate();
 
@@ -120,13 +121,41 @@ const MenuTimings = () => {
     };
 
     fetchMenuTimings();
-  }, []);
+  }, [refresh]);
 
-  const removeDish = (id) => {
-    setMenu((prevMenu) => ({
-      ...prevMenu,
-      dishes: prevMenu.dishes.filter((item) => item.id !== id),
-    }));
+  const removeDish = async (name) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/restaurant/menu/delete/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setRestaurantInfo((prevInfo) => ({
+          ...prevInfo,
+          menu: prevInfo.menu.filter((item) => item.name !== name),
+        }));
+        setRefresh((prev) => !prev);
+      } else {
+        alert(data.message || "Failed to delete menu item.");
+      }
+    } catch (err) {
+      console.error("Failed to delete menu item: ", err);
+    }
   };
 
   const handleEditChange = (e) => {
@@ -137,22 +166,50 @@ const MenuTimings = () => {
     }));
   };
 
-  const handleSave = () => {
-    setMenu((prevMenu) => ({
-      ...prevMenu,
-      dishes: prevMenu.dishes.map((item) =>
-        item.id === editDish.id
-          ? {
-              ...item,
-              name: editDish.name,
-              price: parseFloat(editDish.price),
-              img: editDish.img,
-              category: editDish.category,
-            }
-          : item
-      ),
-    }));
-    setEditDish(null);
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/restaurant/menu/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(editDish),
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        setRestaurantInfo((prev) => ({
+          ...prev,
+          menu: prev.menu.map((item) =>
+            item.name === editDish.name
+              ? {
+                  ...item,
+                  name: editDish.name,
+                  price: parseFloat(editDish.price),
+                  img: editDish.img,
+                  category: editDish.category,
+                }
+              : item
+          ),
+        }));
+        setEditDish(null);
+        setRefresh((prev) => !prev);
+      } else {
+        alert(data.message || "Failed to update menu.");
+      }
+    } catch (err) {
+      console.error("Error updating menu: ", err);
+    }
   };
 
   return (
@@ -177,12 +234,12 @@ const MenuTimings = () => {
               Days Open:{" "}
             </p>
             <div className="flex flex-wrap">
-              {/* {restaurantInfo?.openDays.map((day, index) => (
+              {restaurantInfo?.openDays.map((day, index) => (
                 <span key={index} className="flex">
                   {day}
-                  {index < timings.days.length - 1 && <pre>, </pre>}
+                  {index < restaurantInfo.openDays.length - 1 && <pre>, </pre>}
                 </span>
-              ))} */}
+              ))}
             </div>
           </div>
         </div>
@@ -231,13 +288,18 @@ const MenuTimings = () => {
               <div className="flex w-full justify-center">
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white font-semibold w-[82px] py-0.5 cursor-pointer rounded-md mx-2"
-                  // onClick={() => removeDish(item.id)}
+                  onClick={() => removeDish(item.name)}
                 >
                   REMOVE
                 </button>
                 <button
                   className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold w-[82px] py-0.5 cursor-pointer rounded-md mx-2"
-                  onClick={() => setEditDish(item)}
+                  onClick={() =>
+                    setEditDish({
+                      ...item,
+                      originalName: item.name,
+                    })
+                  }
                 >
                   EDIT
                 </button>
