@@ -195,6 +195,7 @@ router.get("/favourites", auth, async (req, res) => {
       id: favourite._id,
       restaurant_name: favourite.restaurantId?.restaurantName || "N/A",
       restaurant_rating: favourite.restaurantId?.restaurantRating || 0,
+      restaurantId: favourite.restaurantId?._id || 0,
       item: {
         name: favourite.item.name,
         price: favourite.item.price,
@@ -228,6 +229,51 @@ router.delete("/favourite/delete/:id", auth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to delete item" });
+  }
+});
+
+router.post("/favourites/add", auth, async (req, res) => {
+  const userId = req.user.userId;
+  const { restaurantId, item } = req.body;
+
+  try {
+    const newFavourite = new Favourite({
+      userId,
+      restaurantId,
+      item,
+    });
+
+    await newFavourite.save();
+    res.status(200).json({ message: "Item successfully added to favourites." });
+  } catch (err) {
+    console.error("Error in adding to favourites: ", err);
+    res
+      .status(500)
+      .json({ message: "Server error while adding to favourites." });
+  }
+});
+
+router.delete("/favourites/remove", auth, async (req, res) => {
+  const userId = req.user.userId;
+  const { restaurantId, dish_name } = req.body;
+
+  try {
+    const deleted = await Favourite.findOneAndDelete({
+      userId: userId,
+      restaurantId: restaurantId,
+      "item.name": dish_name,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Item not found." });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Item successfully deleted from Favourites." });
+  } catch (err) {
+    console.error("Error deleting favourite item: ", err);
+    res.status(500).json({ message: "Failed to delete Item." });
   }
 });
 

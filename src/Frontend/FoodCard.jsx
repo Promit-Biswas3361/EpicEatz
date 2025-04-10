@@ -4,10 +4,13 @@ import veg from "../assets/veg.png";
 import nonveg from "../assets/nonveg.jpg";
 import { useSelector } from "react-redux";
 import { useCart } from "./context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 const FoodCard = ({ dish }) => {
   const [count, setCount] = useState(0);
   const [favourite, setFavourite] = useState(false);
+
+  const navigate = useNavigate();
 
   const { isAuthenticated, role } = useSelector((state) => state.login);
   const { cart, addToCart, updateQty, removeFromCart } = useCart();
@@ -76,6 +79,126 @@ const FoodCard = ({ dish }) => {
     }
   };
 
+  const addToFavourites = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+
+    const favouriteItem = {
+      restaurantId: dish.restaurantId,
+      item: {
+        name: dish.item.name,
+        price: dish.item.price,
+        category: dish.item.category,
+        img: dish.item.imgUrl,
+      },
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/user/favourites/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(favouriteItem),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Item added to favourites.");
+        return true;
+      } else {
+        console.log(data.message || "Failed to add to Favourites.");
+        return false;
+      }
+    } catch (err) {
+      console.error("Error while adding item to favourites.");
+      return false;
+    }
+  };
+
+  const removeFromFavourites = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+
+    const item = {
+      restaurantId: dish.restaurantId,
+      dish_name: dish.item.name,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/user/favourites/remove",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(item),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Item removed from favourites.");
+        return true;
+      } else {
+        console.log(data.message || "Failed to remove from Favourites.");
+        return false;
+      }
+    } catch (err) {
+      console.error("Error while removing item from favourites.");
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    const checkIfFavourite = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch("http://localhost:5000/api/user/favourites", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          const exists = data.favourites.some(
+            (fav) =>
+              fav.restaurantId === dish.restaurantId &&
+              fav.item.name === dish.item.name
+          );
+          setFavourite(exists);
+        }
+      } catch (err) {
+        console.error("Failed to fetch favourites.");
+      }
+    };
+
+    checkIfFavourite();
+  }, []);
+
+  const toggleFavourite = async () => {
+    if (favourite) {
+      const success = await removeFromFavourites();
+      if (success) setFavourite(false);
+    } else {
+      const success = await addToFavourites();
+      if (success) setFavourite(true);
+    }
+  };
+
   return (
     <div className="flex flex-col bg-white p-5 rounded-2xl w-80 lg:w-100 mb-5">
       {/* 👤 Restaurant Info */}
@@ -115,7 +238,7 @@ const FoodCard = ({ dish }) => {
           {isAuthenticated && role === "User" && (
             <div
               className="absolute top-2 right-2 cursor-pointer"
-              onClick={() => setFavourite((prev) => !prev)}
+              onClick={toggleFavourite}
             >
               <Heart color="white" fill={favourite ? "red" : "transparent"} />
             </div>

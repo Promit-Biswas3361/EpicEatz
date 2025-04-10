@@ -24,7 +24,7 @@ router.post("/", auth, async (req, res) => {
     });
 
     await newOrder.save();
-    await Cart.findOneAndDelete({userId: userId});
+    await Cart.findOneAndDelete({ userId: userId });
     res
       .status(200)
       .json({ message: "Order placed successfully. ", order: newOrder });

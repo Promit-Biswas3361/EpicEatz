@@ -197,6 +197,7 @@ const Favourites = () => {
         const data = await response.json();
         if (response.ok) {
           setFavourites(data.favourites);
+          console.log("data.favourites", data.favourites);
         } else {
           alert(data.message || "Error fetching favourites");
         }

@@ -99,7 +99,7 @@ router.delete("/menu/delete/", auth, async (req, res) => {
     await restaurant.save();
     res.status(200).json({ message: "Item removed successfully." });
   } catch (error) {
-    console.error("Remove dish error:", err);
+    console.error("Remove dish error:", error);
     res.status(500).json({ message: "Server error while removing dish." });
   }
 });
