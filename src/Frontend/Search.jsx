@@ -26,6 +26,7 @@ const Search = () => {
                         key={i}
                         dish={{
                           item: dish,
+                          restaurantId: restaurant.restaurantId,
                           restaurant_name: restaurant.restaurant_name,
                           restaurant_rating: restaurant.restaurant_rating,
                         }}

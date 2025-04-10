@@ -43,7 +43,6 @@ export const CartProvider = ({ children }) => {
       }
     }
   };
-  
 
   const updateQty = async (itemId, qty) => {
     const updated = await updateCartItem(itemId, qty);
@@ -66,7 +65,14 @@ export const CartProvider = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, updateQty, removeFromCart, clearCart }}
+      value={{
+        cart,
+        addToCart,
+        updateQty,
+        removeFromCart,
+        clearCart,
+        loadCart,
+      }}
     >
       {children}
     </CartContext.Provider>

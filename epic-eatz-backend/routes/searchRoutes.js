@@ -18,6 +18,7 @@ router.get("/:name", async (req, res) => {
     // Build a result containing only matching dishes
     const result = restaurants.map((restaurant) => ({
       restaurant_name: restaurant.restaurantName,
+      restaurantId: restaurant._id,
       restaurant_rating: restaurant.restaurantRating,
       item: restaurant.menu.filter((item) => regex.test(item.name)),
     }));

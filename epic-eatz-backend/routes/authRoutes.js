@@ -23,8 +23,6 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    console.log("User Found:", user); // Debugging
-
     // Generate JWT Token
     if (!process.env.JWT_SECRET) {
       console.error("JWT_SECRET is missing in .env file!");

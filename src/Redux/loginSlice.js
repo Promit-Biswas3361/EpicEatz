@@ -5,6 +5,7 @@ const initialState = {
   user: null,
   error: null,
   role: null,
+  restaurantId: null,
 };
 
 const loginSlice = createSlice({
@@ -16,11 +17,13 @@ const loginSlice = createSlice({
       state.user = action.payload.email;
       state.error = null;
       state.role = action.payload.role;
+      state.restaurantId = null;
     },
     loginFailure: (state, action) => {
       state.isAuthenticated = false;
       state.user = null;
       state.role = null;
+      state.restaurantId = null;
       state.error = action.payload;
     },
     logout: (state) => {
@@ -28,8 +31,12 @@ const loginSlice = createSlice({
       state.user = null;
       state.error = null;
       state.role = null;
+      state.restaurantId = null;
       localStorage.removeItem("token");
     },
+    setRestaurant: (state, action) => {
+      state.restaurantId = action.payload.restaurantId;
+    }
   },
 });
 

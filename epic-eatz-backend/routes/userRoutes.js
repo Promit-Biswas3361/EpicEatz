@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Orders = require("../models/Orders");
 const Address = require("../models/Address");
 const Favourite = require("../models/Favourite");
+const Restaurant = require("../models/Restaurant");
 const bcrypt = require("bcryptjs");
 
 const router = express.Router();
@@ -14,7 +15,20 @@ router.get("/profile", auth, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
+
+    let userData = user.toObject();
+
+    if (userData.role === "Partner") {
+      const restaurant = await Restaurant.findOne({
+        owner: req.user.userId,
+      }).select("restaurantName");
+
+      if (restaurant) {
+        userData.restaurantName = restaurant.restaurantName;
+      }
+    }
+
+    res.json(userData);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
